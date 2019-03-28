@@ -18,7 +18,7 @@ public class FilterDTO {
 
     /** Determinate the value of the targeted index.*/
     @NotNull
-    private String value;
+    private String data;
 
     /**
      * @return the field
@@ -38,14 +38,14 @@ public class FilterDTO {
      * @return the value
      */
     public String getValue() {
-        return value;
+        return data;
     }
 
     /**
      * @param newValue the value to set
      */
     public void setValue(final String newValue) {
-        this.value = newValue;
+        this.data = newValue;
     }
 
 }

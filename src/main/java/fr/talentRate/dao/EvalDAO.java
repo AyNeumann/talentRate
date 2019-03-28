@@ -9,29 +9,35 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.DocWriteResponse;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchScrollRequest;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.talentRate.dto.EvalDTO;
 import fr.talentRate.dto.FilterDTO;
+import fr.talentRate.dto.RetrieveEvalDTO;
 
 /**
  * DAO for eval.
@@ -40,30 +46,26 @@ import fr.talentRate.dto.FilterDTO;
  */
 @Service
 public class EvalDAO {
-
     /** logger.*/
     private static final Logger LOG = LogManager.getLogger();
-    /**
-     * first port number where elasticsearch client is connected.
-     */
+    /** First port number where elasticsearch client is connected. */
     private static final int PORT = 9200;
-    /**
-     * second port number where elasticsearch client is connected.
-     */
+    /** Second port number where elasticsearch client is connected. */
     private static final int PORT2 = 9201;
 
     /** Default scroll page size. */
     private static final Integer DEFAULT_PAGE_SIZE = 10;
 
-    /**
-     * Rest High Level Client for elasticsearch.
-     */
+    /** Rest High Level Client for elasticsearch. */
     private RestHighLevelClient client;
 
-    /**
-     * Jackson object mapper.
-     */
+    /** Jackson object mapper. */
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    /** Default index namefor evaluations. */
+    public static final String INDEX_NAME = "eval2";
+    /** Default data Type in elasticSearch. */
+    private static final String DATA_TYPE = "doc";
 
     /**
      * creating client for elasticsearch.
@@ -79,21 +81,17 @@ public class EvalDAO {
      * @return boolean if eval is created
      */
     public IndexResponse saveEval(final EvalDTO data) {
-
         LOG.debug("Data to save : " + data);
 
-        String indexName = "eval2";
-
-        IndexRequest request = new IndexRequest(indexName, "doc");
+        IndexRequest request = new IndexRequest(INDEX_NAME, DATA_TYPE);
 
         //Map dataMap = objectMapper.convertValue(data, Map.class);
 
         String dataMap = null;
         try {
             dataMap = objectMapper.writeValueAsString(data);
-        } catch (JsonProcessingException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+        } catch (JsonProcessingException jpe) {
+            LOG.error("Cannot save eval : error while parsing Input data : ", jpe);
         }
 
         request.source(dataMap, XContentType.JSON);
@@ -101,14 +99,14 @@ public class EvalDAO {
         IndexResponse response = null;
         try {
             response = client.index(request, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            LOG.error("cannot create document");
+        } catch (IOException ioe) {
+            LOG.error("cannot create document in ElasticSearch", ioe);
         }
 
         if (null != response && response.getResult() == DocWriteResponse.Result.CREATED) {
-            LOG.info("Document created with ID : " + response.getId());
+            LOG.info("Eval created with ID : " + response.getId());
         } else {
-            LOG.warn("Document NOT created ( =>" + response.getResult() + " )");
+            LOG.warn("Eval NOT created ( =>" + response.getResult() + " )");
         }
 
         return response;
@@ -119,41 +117,96 @@ public class EvalDAO {
      * Retrieve all evals.
      * @return all evals as String.
      */
-    public List<EvalDTO> retrieveEval() {
+    public List<RetrieveEvalDTO> retrieveEval() {
         return executeSearch(QueryBuilders.matchAllQuery());
     }
 
     /**
      * Retrieve evals with parameters.
-     * @param filDTO reference to FilterDTO.
+     * @param filterDTO reference to FilterDTO.
      * @return all evals matching with query
      */
-    public List<EvalDTO> searchEval(final FilterDTO filDTO) {
-        int dotPos = filDTO.getField().lastIndexOf('.');
-        MatchQueryBuilder matchQuery = QueryBuilders.matchQuery(filDTO.getField(), filDTO.getValue());
-
+    public List<RetrieveEvalDTO> searchEval(final FilterDTO filterDTO) {
+        TermQueryBuilder termQuery = QueryBuilders.termQuery(filterDTO.getField() + ".keyword", filterDTO.getValue());
         QueryBuilder fullQuery = null;
 
+        int dotPos = filterDTO.getField().lastIndexOf('.');
         if (dotPos == -1) {
-            fullQuery = matchQuery;
+            fullQuery = termQuery;
         } else {
-            String prefix = filDTO.getField().substring(0, dotPos);
-            //String field = filDTO.getField().substring(dotPos);
-            NestedQueryBuilder netedBuilder = QueryBuilders.nestedQuery(prefix, matchQuery, ScoreMode.None);
+            String prefix = filterDTO.getField().substring(0, dotPos);
+            NestedQueryBuilder nestedBuilder = QueryBuilders.nestedQuery(prefix, termQuery, ScoreMode.None);
 
-            fullQuery = netedBuilder;
+            fullQuery = nestedBuilder;
         }
 
         return executeSearch(fullQuery);
     }
 
     /**
-     * Exectue a custopn SEARCH query and transform result to DTOs.
+     * Retrieve eval with matching id.
+     * @param id id of the queried eval.
+     * @return found eval.
+     */
+    public RetrieveEvalDTO retrieveEvalById(final String id) {
+        GetRequest getRequest = new GetRequest(INDEX_NAME, DATA_TYPE, id);
+
+        GetResponse getResponse = null;
+        try {
+            getResponse = client.get(getRequest, RequestOptions.DEFAULT);
+        } catch (IOException ioe) {
+            LOG.error("Error while querying Eval with id : " + id, ioe);
+        }
+
+        String getResponseString = getResponse.getSourceAsString();
+
+        RetrieveEvalDTO transformedData = null;
+        try {
+            transformedData = objectMapper.readValue(getResponseString, RetrieveEvalDTO.class);
+        } catch (JsonParseException | JsonMappingException e) {
+            LOG.error("response form ElasticSearch is invalid", e);
+        } catch (IOException ioe) {
+            LOG.error("Error while mapping response ", ioe);
+        }
+
+        return transformedData;
+    }
+
+    /**
+     * Update eval with matching id.
+     * @param id id of the eval to update.
+     * @param eval new eval data.
+     * @return TRUE when save succefull.
+     */
+    public Boolean updateEval(final String id, final EvalDTO eval) {
+        Boolean isUpdated = Boolean.FALSE;
+        UpdateRequest updateRequest = new UpdateRequest(INDEX_NAME, DATA_TYPE, id);
+
+        String updatedDoc = null;
+        try {
+            updatedDoc = objectMapper.writeValueAsString(eval);
+        } catch (JsonProcessingException jpe) {
+            LOG.error("response form ElasticSearch is invalid", jpe);
+        }
+
+        updateRequest.doc(updatedDoc, XContentType.JSON);
+        try {
+            client.update(updateRequest, RequestOptions.DEFAULT);
+            isUpdated = Boolean.TRUE;
+        } catch (IOException ioe) {
+            LOG.error("Error while mapping response ", ioe);
+        }
+
+        return isUpdated;
+    }
+
+    /**
+     * Execute a custom SEARCH query and transform result to DTOs.
      * @param query query to execute
      * @return a List a EvalDTO matching the query
      */
-    private List<EvalDTO> executeSearch(final QueryBuilder query) {
-        SearchRequest searchRequest = new SearchRequest("eval2");
+    private List<RetrieveEvalDTO> executeSearch(final QueryBuilder query) {
+        SearchRequest searchRequest = new SearchRequest(INDEX_NAME);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(query);
         searchSourceBuilder.size(DEFAULT_PAGE_SIZE);
@@ -161,7 +214,7 @@ public class EvalDAO {
         searchRequest.source(searchSourceBuilder);
 
         SearchResponse searchResponse = null;
-        List<EvalDTO> evalData = new ArrayList<>();
+        List<RetrieveEvalDTO> evalData = new ArrayList<>();
         try {
             searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
 
@@ -174,15 +227,15 @@ public class EvalDAO {
             } while (searchResponse.getHits().getHits().length > 0);
 
         } catch (IOException e) {
-            LOG.error("Error while matching ALL evals", e);
+            LOG.error("Error while matching evals with query " + query, e);
         }
 
         return evalData;
     }
 
     /**
-     * Retieve srolled Data from a position.
-     * @param scrollId poistion (extracted form previous scolled response)
+     * Retrieve scrolled Data from a position.
+     * @param scrollId position (extracted form previous scrolled response)
      * @return The data page
      * @throws IOException if IO errors
      */
@@ -201,17 +254,21 @@ public class EvalDAO {
     /**
      * Transform each searchResult (of Eval) and add then to an existing list.
      * @param data the Bulk Data from ElasticSearch
-     * @param existingData Lisit to add the new transformed Datas
+     * @param existingData List to add the new transformed Datas
      */
-    private void transformAndAddToDtoList(final SearchHit[] data, final List<EvalDTO> existingData) {
+    private void transformAndAddToDtoList(final SearchHit[] data, final List<RetrieveEvalDTO> existingData) {
         for (SearchHit evalHit : data) {
             String source = evalHit.getSourceAsString();
-
             try {
                 EvalDTO transformedData = objectMapper.readValue(source, EvalDTO.class);
-                existingData.add(transformedData);
-            } catch (IOException e) {
-                LOG.warn("Ignoring invalid Eval (source)", e);
+
+                RetrieveEvalDTO fullData = new RetrieveEvalDTO(transformedData);
+                fullData.setId(evalHit.getId());
+                fullData.setSchool(transformedData.getSchool());
+
+                existingData.add(fullData);
+            } catch (IOException ioe) {
+                LOG.warn("Ignoring invalid Eval (source) with ID : " + evalHit.getId(), ioe);
             }
         }
     }

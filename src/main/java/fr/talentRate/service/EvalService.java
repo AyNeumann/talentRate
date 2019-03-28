@@ -1,8 +1,6 @@
 package fr.talentRate.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +12,7 @@ import fr.talentRate.dao.EvalDAO;
 import fr.talentRate.dao.IndexDAO;
 import fr.talentRate.dto.EvalDTO;
 import fr.talentRate.dto.FilterDTO;
+import fr.talentRate.dto.RetrieveEvalDTO;
 
 /**
  * Eval service.
@@ -27,59 +26,73 @@ public class EvalService {
 
     /**Reference to indexDAO.*/
     @Autowired
-    private IndexDAO indao;
+    private IndexDAO indexDao;
 
     /** Reference to evalDAO. */
     @Autowired
-    private EvalDAO evdao;
+    private EvalDAO evalDao;
 
     /**
-     * Create a new document.
+     * Create a new Eval.
      * @param data ref to EvalDTO.
-     * @return the created JSON
+     * @return The id of created document
      */
-    public Map<String, String> create(final EvalDTO data) {
-        LOG.info("Creation du document XXXXX");
+    public String create(final EvalDTO data) {
+        LOG.info("Creating Eval : " + data);
 
         IndexResponse response = null;
         try {
-            indao.createIfNotExists("eval2");
-            response = evdao.saveEval(data);
-
-        } catch (Exception e) {
+            indexDao.createIfNotExists(EvalDAO.INDEX_NAME);
+            response = evalDao.saveEval(data);
+        } catch (RuntimeException e) {
             LOG.error("Error while saving document", e);
         }
-        //        } finally {
-        //            evdao.closeClient();
-        //            indao.closeClient();
-        //        }
 
-        Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("ID:", response.getId());
-        return responseMap;
+        return response.getId();
     }
 
     /**
      * Retrieve all evals.
      * @return all evals as List of EvalDTO.
      */
-    public List<EvalDTO> retrieveEval() {
-        List<EvalDTO> response = evdao.retrieveEval();
+    public List<RetrieveEvalDTO> retrieveEval() {
+        List<RetrieveEvalDTO> response = evalDao.retrieveEval();
         return response;
     }
 
     /**
      * Retrieve evals matching with parameters.
      * @param field name of the elasticsearch field.
-     * @param value value of the field in elasticsearch.
+     * @param data value of the field in elasticsearch.
      * @return evals matching with parameters as List of EvalDTO.
      */
-    public List<EvalDTO> searchEval(final String field, final String value) {
-        FilterDTO fildto = new FilterDTO();
+    public List<RetrieveEvalDTO> searchEval(final String field, final String data) {
+        FilterDTO filterDto = new FilterDTO();
 
-        fildto.setField(field);
-        fildto.setValue(value);
-        List<EvalDTO> response = evdao.searchEval(fildto);
+        filterDto.setField(field);
+        filterDto.setValue(data);
+        List<RetrieveEvalDTO> response = evalDao.searchEval(filterDto);
         return response;
+    }
+
+    /**
+     * Retrieve eval with matching id.
+     * @param id id of the queried eval.
+     * @return found eval.
+     */
+    public RetrieveEvalDTO retrieveEvalById(final String id) {
+        RetrieveEvalDTO response = evalDao.retrieveEvalById(id);
+
+        return response;
+    }
+
+    /**
+     * Update eval with matching id.
+     * @param id id of the eval to update.
+     * @param eval new eval data.
+     * @return TRUE when eval is succefully saved
+     */
+    public Boolean updateEval(final String id, final EvalDTO eval) {
+        return evalDao.updateEval(id, eval);
     }
 }

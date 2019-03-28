@@ -1,7 +1,5 @@
 package fr.talentRate.dto;
 
-import java.util.Map;
-
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,7 +10,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class EvalDTO {
+    /** Default Evaluation size WITHOUT student size.*/
+    protected static final int DEFAULT_EVAL_CHAR_SIZE = 256;
 
     /**Name of the school where the eval is done.*/
     @NotNull
@@ -50,29 +51,17 @@ public class EvalDTO {
     @NotNull
     private String obtainable;
 
-    /**
-     * Init an Eval's values.
-     * @param datas Plain Data.
-     */
-    public void fromArray(final Map<String, String> datas) {
-        this.school = datas.get("school");
-        this.module = datas.get("module");
-        this.score = datas.get("score");
-        //TODO to be finished
-
-        this.student = new StudentDTO();
-        this.student.fromJson(datas.get("student"));
-    }
-
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        String studentStr = student.toString();
+        @SuppressWarnings("PMD.InsufficientStringBufferDeclaration")
+        StringBuilder builder = new StringBuilder(DEFAULT_EVAL_CHAR_SIZE + studentStr.length());
         builder.append("EvalDTO [school=").append(school).append(", module=").append(module).append(", promotion=")
                 .append(promotion).append(", category=").append(category).append(", skill=").append(skill)
-                .append(", homework=").append(homework).append(", student=").append(student).append(", score=")
+                .append(", homework=").append(homework).append(", student=").append(studentStr).append(", score=")
                 .append(score).append(", obtainable=").append(obtainable).append(']');
         return builder.toString();
     }

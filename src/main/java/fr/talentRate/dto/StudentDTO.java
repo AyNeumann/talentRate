@@ -27,12 +27,29 @@ public class StudentDTO {
     /** Student Full name. */
     private String name;
 
+    /** Minimal bytes size for a String representation of a student.*/
+    public static final int STUDENT_MINIMAL_CHAR_SIZE = 64;
+
+    /**
+     * Default constructor.
+     */
+    public StudentDTO() {
+    }
+
+    /**
+     * Custom constructor with data.
+     * @param newName name of the student.
+     */
+    public StudentDTO(final String newName) {
+        this.name = newName;
+    }
+
     /**
      * Initialize student's values.
      * @param jsonData plain Data
      */
     public void fromJson(final String jsonData) {
-        //TODO to refactore wehn Student becomem ore complexe.
+        //TODO to refactor when Student become more complex.
         this.name = jsonData;
     }
 
@@ -42,7 +59,7 @@ public class StudentDTO {
      */
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder(STUDENT_MINIMAL_CHAR_SIZE);
         builder.append("StudentDTO [name=").append(name).append(']');
         return builder.toString();
     }
