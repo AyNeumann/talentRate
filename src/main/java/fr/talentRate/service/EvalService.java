@@ -12,6 +12,7 @@ import fr.talentRate.dao.EvalDAO;
 import fr.talentRate.dao.IndexDAO;
 import fr.talentRate.dto.EvalDTO;
 import fr.talentRate.dto.FilterDTO;
+import fr.talentRate.dto.MultiStackedDataDTO;
 import fr.talentRate.dto.RetrieveEvalDTO;
 
 /**
@@ -84,6 +85,35 @@ public class EvalService {
         RetrieveEvalDTO response = evalDao.retrieveEvalById(id);
 
         return response;
+    }
+
+    /**
+     * Retrieve data for required graph, WITH a filter value.
+     * @param field name of the elasticsearch field to retrieve.
+     * @param data value of the field in elasticsearch.
+     * @param graphType type of required graph will define datas to return.
+     * @return the datas
+     */
+    public List<MultiStackedDataDTO> retrieveGraphData(final String field, final String data, final String graphType) {
+        LOG.info("Building graph with datas field: " + field + "data: " + data + "graphType: " + graphType);
+        FilterDTO filterDto = new FilterDTO();
+
+        filterDto.setField(field);
+        filterDto.setValue(data);
+        filterDto.setGraphType(graphType);
+
+        return evalDao.retrieveGraphData(graphType, filterDto);
+    }
+
+    /**
+     * Retrieve data for required graph, WITHOUT a filter value.
+     * @param graphType type of required graph will define datas to return.
+     * @return nb of eval.
+     */
+    public List<MultiStackedDataDTO> retrieveGraphData(final String graphType) {
+        LOG.info("Building graph without datas. graphType: " + graphType);
+        List<MultiStackedDataDTO> result = evalDao.retrieveGraphData(graphType);
+        return result;
     }
 
     /**

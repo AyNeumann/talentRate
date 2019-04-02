@@ -1,11 +1,14 @@
 package fr.talentRate.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.talentRate.dto.EvalDTO;
+import fr.talentRate.dto.MultiStackedDataDTO;
 import fr.talentRate.dto.RetrieveEvalDTO;
 import fr.talentRate.service.EvalService;
 
@@ -33,6 +37,9 @@ import fr.talentRate.service.EvalService;
 @RestController
 @RequestMapping("/eval")
 public class EvalController {
+
+    /** logger.*/
+    private static final Logger LOG = LogManager.getLogger();
 
     /** Reference to EvalService. */
     @Autowired
@@ -95,6 +102,32 @@ public class EvalController {
         RetrieveEvalDTO eval = null;
         eval = evserv.retrieveEvalById(id);
         return eval;
+    }
+
+    /**
+     * Retrieve datas for graphs.
+     * @param field name of the elasticsearch field to retrieve.
+     * @param data value of the field in elasticsearch.
+     * @param graphType type of required graph will define datas to return.
+     * @return nb of eval
+     */
+    @GetMapping("/getgraphdata")
+    public List<MultiStackedDataDTO> retrieveGraphData(
+            @RequestParam(name = "field", required = false) final String field,
+            @RequestParam(name = "data", required = false) final String data,
+            @RequestParam(name = "graphType", required = true) final String graphType) {
+        List<MultiStackedDataDTO> result = new ArrayList<>();
+        //List<MultiStackedDataDTO> listResult = new ArrayList<>();
+        if (field != null && data != null) {
+            LOG.debug("retrieveGraphData called, field and data are NOT null");
+            result = evserv.retrieveGraphData(field, data, graphType);
+        } else if (field == null && data == null) {
+            result = evserv.retrieveGraphData(graphType);
+            LOG.debug("retrieveGraphData called, field and data are null. Graph Type: " + graphType);
+        }
+
+        //listResult.add(result);
+        return result;
     }
 
     /**

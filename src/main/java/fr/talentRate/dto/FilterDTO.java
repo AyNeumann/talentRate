@@ -20,6 +20,9 @@ public class FilterDTO {
     @NotNull
     private String data;
 
+    /** Graph type required. */
+    private String graphType;
+
     /**
      * @return the field
      */
@@ -46,6 +49,20 @@ public class FilterDTO {
      */
     public void setValue(final String newValue) {
         this.data = newValue;
+    }
+
+    /**
+     * @return the graphType
+     */
+    public String getGraphType() {
+        return graphType;
+    }
+
+    /**
+     * @param newGraphType the graphType to set
+     */
+    public void setGraphType(final String newGraphType) {
+        this.graphType = newGraphType;
     }
 
 }

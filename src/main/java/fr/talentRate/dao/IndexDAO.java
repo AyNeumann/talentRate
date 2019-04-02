@@ -83,7 +83,7 @@ public class IndexDAO {
         try {
             createIndexResponse = client.indices().create(requestCreateIndex, RequestOptions.DEFAULT);
         } catch (IOException e1) {
-            LOG.error("No index response, index has'nt been created", e1);
+            LOG.error("No index response, index has not been created", e1);
         }
 
         if (null != createIndexResponse && createIndexResponse.isAcknowledged()) {
