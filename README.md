@@ -1,8 +1,10 @@
 # talentRate
 
 ## Required elastic mapping:
-```{
-  "mapping": {
+*** Warning to creeate an index do not forget the 's' at mappings ! ***
+```
+{
+  "mappings": {
     "_doc": {
       "properties": {
         "category": {
@@ -95,4 +97,6 @@
       }
     }
   }
-}```
+}
+
+```
