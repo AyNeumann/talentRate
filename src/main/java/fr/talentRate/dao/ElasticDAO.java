@@ -186,14 +186,14 @@ public class ElasticDAO {
     public Boolean checkExists(final String indexName) {
         GetIndexRequest requestCheckExist = new GetIndexRequest();
 
+        requestCheckExist.indices(indexName);
+
         Boolean exists = null;
         try {
             exists = client.indices().exists(requestCheckExist, RequestOptions.DEFAULT);
         } catch (IOException e) {
             LOG.error("Cannot check if index " + indexName + " exists");
         }
-
-        requestCheckExist.indices(indexName);
 
         return exists;
 
