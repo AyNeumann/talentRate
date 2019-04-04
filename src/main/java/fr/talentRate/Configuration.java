@@ -22,6 +22,12 @@ public class Configuration {
     /** Name of the elasticSearch index. */
     @Value("${db-info.index}")
     private String index;
+    /** ElasticSearch user name. */
+    @Value("${db-info.user}")
+    private String user;
+    /** Elastic search user password. */
+    @Value("${db-info.password}")
+    private String password;
 
     /**
      * @return the dataBaseUrl
@@ -77,6 +83,34 @@ public class Configuration {
      */
     public void setIndex(final String theIndex) {
         this.index = theIndex;
+    }
+
+    /**
+     * @return the user
+     */
+    public String getUser() {
+        return user;
+    }
+
+    /**
+     * @param theUser the user to set
+     */
+    public void setUser(final String theUser) {
+        this.user = theUser;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param thePassword the password to set
+     */
+    public void setPassword(final String thePassword) {
+        this.password = thePassword;
     }
 
 }

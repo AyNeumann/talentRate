@@ -39,6 +39,12 @@ import fr.talentRate.Configuration;
 public class ElasticDAO {
     /** logger.*/
     private static final Logger LOG = LogManager.getLogger();
+
+    /** Default data Type in elasticSearch. */
+    private static final String DATA_TYPE = "_doc";
+    /** Default scroll page size. */
+    private static final Integer DEFAULT_PAGE_SIZE = 10;
+
     /**Reference to Configuration.*/
     @Autowired
     private Configuration config;
@@ -46,11 +52,10 @@ public class ElasticDAO {
     private static RestHighLevelClient client;
     /** Name of the elasticSearch index. */
     private String elasticIndex;
-    /** Default data Type in elasticSearch. */
-    private static final String DATA_TYPE = "_doc";
 
-    /** Default scroll page size. */
-    private static final Integer DEFAULT_PAGE_SIZE = 10;
+    /** Elastic Authen,tification callback. **/
+    @Autowired
+    private TalentRateAuthCallback callBack;
 
     /**
      * Initialize elsaticsearch client.
@@ -58,7 +63,8 @@ public class ElasticDAO {
     @PostConstruct
     public void init() {
         client = new RestHighLevelClient(RestClient
-                .builder(new HttpHost(config.getDataBaseUrl(), config.getDataBasePort(), config.getProtocol())));
+                .builder(new HttpHost(config.getDataBaseUrl(), config.getDataBasePort(), config.getProtocol()))
+                .setHttpClientConfigCallback(callBack));
         elasticIndex = config.getIndex();
     }
 

@@ -24,13 +24,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
  *
  */
 @SpringBootApplication
-public final class Launcher {
-
-    /**Utility class.*/
-    private Launcher() {
-
-    }
-
+public class Launcher {
     /**
      * @param args command line args
      */
