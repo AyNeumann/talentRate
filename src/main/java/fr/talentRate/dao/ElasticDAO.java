@@ -227,7 +227,7 @@ public class ElasticDAO {
      * @return a ready to send to aggregation request
      */
     private SearchRequest createRequest(final AggregationBuilder builder) {
-        SearchRequest searchRequest = new SearchRequest("eval3");
+        SearchRequest searchRequest = new SearchRequest(elasticIndex);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.aggregation(builder);
         searchRequest.source(searchSourceBuilder);
@@ -258,7 +258,7 @@ public class ElasticDAO {
      * @return a ready to send to search request
      */
     private SearchRequest createRequest(final QueryBuilder query) {
-        SearchRequest searchRequest = new SearchRequest("eval3");
+        SearchRequest searchRequest = new SearchRequest(elasticIndex);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(query);
         searchSourceBuilder.size(DEFAULT_PAGE_SIZE);
