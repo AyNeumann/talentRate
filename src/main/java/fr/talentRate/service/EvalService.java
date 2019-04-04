@@ -8,6 +8,7 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.talentRate.Configuration;
 import fr.talentRate.dao.EvalDAO;
 import fr.talentRate.dao.IndexDAO;
 import fr.talentRate.dto.EvalDTO;
@@ -24,6 +25,10 @@ import fr.talentRate.dto.RetrieveEvalDTO;
 public class EvalService {
     /** logger.*/
     private static final Logger LOG = LogManager.getLogger();
+
+    /** Reference to configuration. */
+    @Autowired
+    private Configuration config;
 
     /**Reference to indexDAO.*/
     @Autowired
@@ -43,7 +48,7 @@ public class EvalService {
 
         IndexResponse response = null;
         try {
-            indexDao.createIfNotExists(EvalDAO.INDEX_NAME);
+            indexDao.createIfNotExists(config.getIndex());
             response = evalDao.saveEval(data);
         } catch (RuntimeException e) {
             LOG.error("Error while saving document", e);

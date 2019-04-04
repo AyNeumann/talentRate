@@ -15,55 +15,26 @@ limitations under the License.
  */
 package fr.talentRate;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 
 /**
  * @author Aymeric
  *
  */
 @SpringBootApplication
-public class Launcher {
+public final class Launcher {
 
-    /** logger.*/
-    private static final Logger LOG = LogManager.getLogger();
+    /**Utility class.*/
+    private Launcher() {
+
+    }
 
     /**
      * @param args command line args
      */
     public static void main(final String[] args) {
-
         new SpringApplicationBuilder(Launcher.class).web(WebApplicationType.SERVLET).run(args);
-
     }
-
-    /**
-     * Reference to EvalController.
-     */
-    //    @Autowired
-    //    private EvalService evServ;
-
-    /**
-     * Entry Point.
-     * @param ctx command line application context
-     * @return an configured command line runner
-     */
-    @Bean
-    public CommandLineRunner commandLineRunner(final ApplicationContext ctx) {
-        return args -> {
-            //            LOG.info("Démarage de l'appli");
-            //
-            //            evServ.create("TestSchool2", "Java");
-            //
-            //            LOG.info("Fin de l'appli");
-        };
-
-    }
-
 }

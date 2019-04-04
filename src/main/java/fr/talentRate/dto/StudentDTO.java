@@ -44,15 +44,6 @@ public class StudentDTO {
         this.name = newName;
     }
 
-    /**
-     * Initialize student's values.
-     * @param jsonData plain Data
-     */
-    public void fromJson(final String jsonData) {
-        //TODO to refactor when Student become more complex.
-        this.name = jsonData;
-    }
-
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      * ?????
