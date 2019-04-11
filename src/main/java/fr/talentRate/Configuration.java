@@ -2,14 +2,19 @@ package fr.talentRate;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Cionfiguration class for elacticsearch client.
+ * Configuration class for elacticsearch client and CORS configuration.
  * @author Aymeric
  *
  */
 @Component
-public class Configuration {
+public class Configuration implements WebMvcConfigurer {
+    /** Cross origin annotation value for front end. */
+    @Value("${fe-info.cross}")
+    private String frontEndCrossOrigin;
     /** Database url.*/
     @Value("${db-info.url}")
     private String dataBaseUrl;
@@ -28,6 +33,30 @@ public class Configuration {
     /** Elastic search user password. */
     @Value("${db-info.password}")
     private String password;
+
+    /**
+     * Global CORS configuration.
+     * @author Aymeric
+     *
+     */
+    @Override
+    public final void addCorsMappings(final CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins(frontEndCrossOrigin);
+    }
+
+    /**
+     * @return the frontEndCross
+     */
+    public String getfrontEndCrossOrigin() {
+        return frontEndCrossOrigin;
+    }
+
+    /**
+     * @param theFrontEndCrossOrigin the frontEndCross to set
+     */
+    public void setfrontEndCrossOrigin(final String theFrontEndCrossOrigin) {
+        this.frontEndCrossOrigin = theFrontEndCrossOrigin;
+    }
 
     /**
      * @return the dataBaseUrl
