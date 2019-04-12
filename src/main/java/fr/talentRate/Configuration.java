@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Component
 public class Configuration implements WebMvcConfigurer {
     /** Cross origin annotation value for front end. */
-    @Value("${fe-info.cross:http://localhost:5000}")
+    @Value("${fe-info.cross:http://localhost:4200}")
     private String frontEndCrossOrigin;
     /** Database url.*/
     @Value("${db-info.url}")
