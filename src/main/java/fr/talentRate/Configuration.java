@@ -2,8 +2,6 @@ package fr.talentRate;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Configuration class for elacticsearch client and CORS configuration.
@@ -11,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  *
  */
 @Component
-public class Configuration implements WebMvcConfigurer {
+public class Configuration {
     /** Cross origin annotation value for front end. */
     @Value("${fe-info.cross:http://localhost:4200}")
     private String frontEndCrossOrigin;
@@ -33,16 +31,6 @@ public class Configuration implements WebMvcConfigurer {
     /** Elastic search user password. */
     @Value("${db-info.password}")
     private String password;
-
-    /**
-     * Global CORS configuration.
-     * @author Aymeric
-     *
-     */
-    @Override
-    public final void addCorsMappings(final CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins(frontEndCrossOrigin);
-    }
 
     /**
      * @return the frontEndCross
