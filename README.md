@@ -100,3 +100,23 @@
 }
 
 ```
+
+## Config
+for apache Proxy add 
+```
+#Your ElasticSearch API URL
+db-info.url=
+#Your ElasticSearch API PORT
+db-info.port=9243
+#Your ElasticSearch API protocol
+db-info.protocol=https
+#ElasticSearch index name to store evals
+db-info.index=tr_eval 
+#Your ElasticSearch Users (empty if no authentification required)
+db-info.user=tr
+#Your ElasticSearch Password (empty if no authentification required)
+db-info.password=pass
+#The Front-End URL
+fe-info.cross=http://talentrate.clicketcloud.com
+```
+
