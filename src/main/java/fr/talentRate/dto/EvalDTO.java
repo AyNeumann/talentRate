@@ -2,6 +2,7 @@ package fr.talentRate.dto;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EvalDTO {
     /** Default Evaluation size WITHOUT student size.*/
     protected static final int DEFAULT_EVAL_CHAR_SIZE = 256;
