@@ -14,7 +14,6 @@ import fr.talentRate.dao.IndexDAO;
 import fr.talentRate.dto.EvalDTO;
 import fr.talentRate.dto.FilterDTO;
 import fr.talentRate.dto.MultiStackedDataDTO;
-import fr.talentRate.dto.RetrieveEvalDTO;
 
 /**
  * Eval service.
@@ -43,7 +42,7 @@ public class EvalService {
      * @param data ref to EvalDTO.
      * @return The id of created document
      */
-    public String create(final EvalDTO data) {
+    public EvalDTO create(final EvalDTO data) {
         LOG.info("Creating Eval : " + data);
 
         IndexResponse response = null;
@@ -54,15 +53,23 @@ public class EvalService {
             LOG.error("Error while saving document", e);
         }
 
-        return response.getId();
+        EvalDTO result = new EvalDTO();
+        if (response.status().name().equals("CREATED")) {
+            result = data;
+            result.setEvalId(response.getId());
+            result.setMessage("Données sauvegardées!");
+            result.setIsDone(true);
+        }
+        // TODO gérer erreur si BDD HS
+        return result;
     }
 
     /**
      * Retrieve all evals.
      * @return all evals as List of EvalDTO.
      */
-    public List<RetrieveEvalDTO> retrieveEval() {
-        List<RetrieveEvalDTO> response = evalDao.retrieveEval();
+    public List<EvalDTO> retrieveEval() {
+        List<EvalDTO> response = evalDao.retrieveEval();
         return response;
     }
 
@@ -72,12 +79,13 @@ public class EvalService {
      * @param data value of the field in elasticsearch.
      * @return evals matching with parameters as List of EvalDTO.
      */
-    public List<RetrieveEvalDTO> searchEval(final String field, final String data) {
+    public List<EvalDTO> searchEval(final String field, final String data) {
+        LOG.info("Searching evals: " + field + "data: " + data);
         FilterDTO filterDto = new FilterDTO();
 
         filterDto.setField(field);
         filterDto.setValue(data);
-        List<RetrieveEvalDTO> response = evalDao.searchEval(filterDto);
+        List<EvalDTO> response = evalDao.searchEval(filterDto);
         return response;
     }
 
@@ -86,8 +94,8 @@ public class EvalService {
      * @param id id of the queried eval.
      * @return found eval.
      */
-    public RetrieveEvalDTO retrieveEvalById(final String id) {
-        RetrieveEvalDTO response = evalDao.retrieveEvalById(id);
+    public EvalDTO retrieveEvalById(final String id) {
+        EvalDTO response = evalDao.retrieveEvalById(id);
 
         return response;
     }
@@ -107,6 +115,7 @@ public class EvalService {
         filterDto.setValue(data);
         filterDto.setGraphType(graphType);
 
+        //TODO Pourquoi passer "grahType" en paramètre alors qu'il est DANS le DTO
         return evalDao.retrieveGraphData(graphType, filterDto);
     }
 
@@ -123,11 +132,35 @@ public class EvalService {
 
     /**
      * Update eval with matching id.
-     * @param id id of the eval to update.
      * @param eval new eval data.
      * @return TRUE when eval is succefully saved
      */
-    public Boolean updateEval(final String id, final EvalDTO eval) {
-        return evalDao.updateEval(id, eval);
+    public EvalDTO updateEval(final EvalDTO eval) {
+        Boolean isUpdated = false;
+        Boolean isErrorSet = false;
+        EvalDTO result = new EvalDTO();
+
+        if (eval.getEvalId() == null || eval.getEvalId().contentEquals("")) {
+            isErrorSet = true;
+            result.setIsDone(false);
+            result.setMessage("Tentative de mise à jour d'une évaluation ne contenant pas d'ID.");
+            LOG.warn("Attempt to update an eval without id: " + eval.toString());
+        } else {
+            isUpdated = evalDao.updateEval(eval);
+        }
+
+        if (isUpdated) {
+            result = eval;
+            result.setIsDone(true);
+            result.setMessage("Données sauvegardées!");
+            LOG.info("Eval updated: " + result.getEvalId());
+        } else {
+            if (!isErrorSet) {
+                result.setIsDone(false);
+                result.setMessage("Une erreur s\' est produite lors de l\' envoie des données.");
+                LOG.warn("Eval NOT updated: " + result.getEvalId());
+            }
+        }
+        return result;
     }
 }

@@ -18,8 +18,8 @@ package fr.talentRate.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
+ * Data Transfert object for student info.
  * @author Aymeric
- *
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class StudentDTO {

@@ -1,9 +1,7 @@
 package fr.talentRate.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -12,9 +10,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.talentRate.dto.EvalDTO;
 import fr.talentRate.dto.MultiStackedDataDTO;
-import fr.talentRate.dto.RetrieveEvalDTO;
 import fr.talentRate.service.EvalService;
+import fr.talentRate.validators.EvalValidator;
 
 /**
  * Manage request for the EvalService.
@@ -57,15 +55,23 @@ public class EvalController {
     /**
      * Post mapping to create an evals in the database.
      * @param eval evalDTO reference.
-     * @return id of the created document.
+     * @param result ????
+     * @return a StateDTO containing status of the createEval and the id of the eval as message.
      */
     @PostMapping("/")
-    public Map<String, String> createEval(@RequestBody @Valid final EvalDTO eval) {
-        String response = evserv.create(eval);
+    public EvalDTO createEval(@RequestBody @Valid final EvalDTO eval, final BindingResult result) {
+        EvalDTO createdEval = new EvalDTO();
+        EvalValidator evalValidator = new EvalValidator();
+        evalValidator.validate(eval, result);
+        if (result.hasErrors()) {
+            createdEval.setIsDone(false);
+            createdEval.setMessage("Le Score ne peut être supérieur au Score Max");
+            LOG.info("Attempt to create an Eval with a score superior to obtainable");
+        } else {
+            createdEval = evserv.create(eval);
+        }
 
-        Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("ID:", response);
-        return responseMap;
+        return createdEval;
     }
 
     /**
@@ -75,10 +81,10 @@ public class EvalController {
      * @return evals matching with parameters as List of EvalDTO.
      */
     @GetMapping("/")
-    public List<RetrieveEvalDTO> searchEval(@RequestParam(name = "field", required = false) final String field,
+    public List<EvalDTO> searchEval(@RequestParam(name = "field", required = false) final String field,
             @RequestParam(name = "data", required = false) final String data) {
 
-        List<RetrieveEvalDTO> evals = null;
+        List<EvalDTO> evals = null;
         if (field == null && data == null) {
             evals = evserv.retrieveEval();
         } else if (field == null || data == null) {
@@ -93,12 +99,13 @@ public class EvalController {
     /**
      * Retrieve eval by id.
      * @param id id id of the queried eval.
-     * @return a RetrieveEvalDTO.
+     * @return a EvalDTO.
      */
     @GetMapping("/getbyid")
-    public RetrieveEvalDTO retrieveById(@RequestParam(name = "id", required = false) final String id) {
-        RetrieveEvalDTO eval = null;
+    public EvalDTO retrieveById(@RequestParam(name = "id", required = false) final String id) {
+        EvalDTO eval = null;
         eval = evserv.retrieveEvalById(id);
+        LOG.info("Eval retrivied by id: " + eval);
         return eval;
     }
 
@@ -130,17 +137,24 @@ public class EvalController {
 
     /**
      * Update eval with matching id.
-     * @param id id of the eval to update.
      * @param eval new eval data.
+     * @param result ???
      * @return Updated status
      */
     @PostMapping("/{id}")
-    public Map<String, Boolean> updateEval(@PathVariable("id") final String id,
-            @RequestBody @Valid final EvalDTO eval) {
-        Boolean isUpdated = evserv.updateEval(id, eval);
-        Map<String, Boolean> responseMap = new HashMap<>();
-        responseMap.put("sucess:", isUpdated);
-        return responseMap;
+    public EvalDTO updateEval(@RequestBody @Valid final EvalDTO eval, final BindingResult result) {
+        EvalValidator evalValidator = new EvalValidator();
+        evalValidator.validate(eval, result);
+        EvalDTO updatedEval = new EvalDTO();
+        if (result.hasErrors()) {
+            updatedEval.setIsDone(false);
+            updatedEval.setMessage("Le Score ne peut être supérieur au Score Max");
+            LOG.info("Attempt to update an Eval with a score superior to obtainable");
+        } else {
+            updatedEval = evserv.updateEval(eval);
+        }
+
+        return updatedEval;
     }
 
     /**

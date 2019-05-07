@@ -6,12 +6,10 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
@@ -33,7 +31,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.talentRate.dto.EvalDTO;
 import fr.talentRate.dto.FilterDTO;
 import fr.talentRate.dto.MultiStackedDataDTO;
-import fr.talentRate.dto.RetrieveEvalDTO;
 
 /**
  * DAO for eval.
@@ -72,7 +69,7 @@ public class EvalDAO extends ElasticDAO {
      * Retrieve all evals.
      * @return all evals as String.
      */
-    public List<RetrieveEvalDTO> retrieveEval() {
+    public List<EvalDTO> retrieveEval() {
         return executeSearch(QueryBuilders.matchAllQuery());
     }
 
@@ -81,7 +78,7 @@ public class EvalDAO extends ElasticDAO {
      * @param filterDTO reference to FilterDTO.
      * @return all evals matching with query
      */
-    public List<RetrieveEvalDTO> searchEval(final FilterDTO filterDTO) {
+    public List<EvalDTO> searchEval(final FilterDTO filterDTO) {
         QueryBuilder fullQuery = builtQuery(filterDTO);
         return executeSearch(fullQuery);
     }
@@ -89,46 +86,55 @@ public class EvalDAO extends ElasticDAO {
     /**
      * Transform a custom DTO to a "Elastic" Query.
      * @param filterDTO filters params
-     * @return Valid query to filter datasa
+     * @return Valid query to filter datas
      */
     private QueryBuilder builtQuery(final FilterDTO filterDTO) {
+        return builtQuery(filterDTO, false);
+    }
+
+    /**
+     * Transform a custom DTO to a "Elastic" Query.
+     * @param filterDTO filters params
+     * @param convertDotToNested does the . (dot) apply to a <b>Nested</b> Query ?
+     * @return Valid query to filter datas
+     */
+    private QueryBuilder builtQuery(final FilterDTO filterDTO, final Boolean convertDotToNested) {
         TermQueryBuilder termQuery = QueryBuilders.termQuery(filterDTO.getField() + ".keyword", filterDTO.getValue());
+
         QueryBuilder fullQuery = null;
-
-        int dotPos = filterDTO.getField().lastIndexOf('.');
-        if (dotPos == -1) {
-            fullQuery = termQuery;
+        if (convertDotToNested) {
+            fullQuery = convertToNested(filterDTO, termQuery);
         } else {
-            String prefix = filterDTO.getField().substring(0, dotPos);
-            NestedQueryBuilder nestedBuilder = QueryBuilders.nestedQuery(prefix, termQuery, ScoreMode.None);
-
-            fullQuery = nestedBuilder;
+            fullQuery = termQuery;
         }
-
         return fullQuery;
     }
 
     /**
      * Transform a custom DTO to a "Elastic" Query.
      * @param filterDTO filters params
-     * @return Valid query to filter datasa
+     * @return Valid query to filter datas
      */
     private QueryBuilder builFiltertQuery(final FilterDTO filterDTO) {
-        BoolQueryBuilder termQuery = QueryBuilders.boolQuery()
+        return builFiltertQuery(filterDTO, false);
+    }
+
+    /**
+     * Transform a custom DTO to a "Elastic" Query.
+     * @param filterDTO filters params
+     * @param convertDotToNested does the . (dot) apply to a <b>Nested</b> Query ?
+     * @return Valid query to filter datas
+     */
+    private QueryBuilder builFiltertQuery(final FilterDTO filterDTO, final Boolean convertDotToNested) {
+        BoolQueryBuilder filterQuery = QueryBuilders.boolQuery()
                 .must(QueryBuilders.matchQuery(filterDTO.getField() + ".keyword", filterDTO.getValue()));
 
         QueryBuilder fullQuery = null;
-
-        int dotPos = filterDTO.getField().lastIndexOf('.');
-        if (dotPos == -1) {
-            fullQuery = termQuery;
+        if (convertDotToNested) {
+            fullQuery = convertToNested(filterDTO, filterQuery);
         } else {
-            String prefix = filterDTO.getField().substring(0, dotPos);
-            NestedQueryBuilder nestedBuilder = QueryBuilders.nestedQuery(prefix, termQuery, ScoreMode.None);
-
-            fullQuery = nestedBuilder;
+            fullQuery = filterQuery;
         }
-
         return fullQuery;
     }
 
@@ -137,14 +143,14 @@ public class EvalDAO extends ElasticDAO {
      * @param id id of the queried eval.
      * @return found eval.
      */
-    public RetrieveEvalDTO retrieveEvalById(final String id) {
+    public EvalDTO retrieveEvalById(final String id) {
         GetResponse getResponse = getData(id);
 
         String getResponseString = getResponse.getSourceAsString();
 
-        RetrieveEvalDTO transformedData = null;
+        EvalDTO transformedData = null;
         try {
-            transformedData = objectMapper.readValue(getResponseString, RetrieveEvalDTO.class);
+            transformedData = objectMapper.readValue(getResponseString, EvalDTO.class);
         } catch (JsonParseException | JsonMappingException e) {
             LOG.error("response form ElasticSearch is invalid", e);
         } catch (IOException ioe) {
@@ -156,12 +162,12 @@ public class EvalDAO extends ElasticDAO {
 
     /**
      * Update eval with matching id.
-     * @param id id of the eval to update.
      * @param eval new eval data.
      * @return TRUE when save successful.
      */
-    public Boolean updateEval(final String id, final EvalDTO eval) {
+    public Boolean updateEval(final EvalDTO eval) {
         String docToUpdate = null;
+        String id = eval.getEvalId();
 
         try {
             docToUpdate = objectMapper.writeValueAsString(eval);
@@ -243,10 +249,10 @@ public class EvalDAO extends ElasticDAO {
      * @param query query to execute
      * @return a List a EvalDTO matching the query
      */
-    private List<RetrieveEvalDTO> executeSearch(final QueryBuilder query) {
+    private List<EvalDTO> executeSearch(final QueryBuilder query) {
         SearchResponse searchResponse = searchData(query);
 
-        List<RetrieveEvalDTO> evalData = new ArrayList<>();
+        List<EvalDTO> evalData = new ArrayList<>();
         SearchHit[] data;
         do {
             data = searchResponse.getHits().getHits();
@@ -264,14 +270,14 @@ public class EvalDAO extends ElasticDAO {
      * @param data the Bulk Data from ElasticSearch
      * @param existingData List to add the new transformed Datas
      */
-    private void transformAndAddToDtoList(final SearchHit[] data, final List<RetrieveEvalDTO> existingData) {
+    private void transformAndAddToDtoList(final SearchHit[] data, final List<EvalDTO> existingData) {
         for (SearchHit evalHit : data) {
             String source = evalHit.getSourceAsString();
             try {
                 EvalDTO transformedData = objectMapper.readValue(source, EvalDTO.class);
 
-                RetrieveEvalDTO fullData = new RetrieveEvalDTO(transformedData);
-                fullData.setId(evalHit.getId());
+                EvalDTO fullData = new EvalDTO(transformedData);
+                fullData.setEvalId(evalHit.getId());
                 fullData.setSchool(transformedData.getSchool());
 
                 existingData.add(fullData);
