@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -198,6 +199,16 @@ public class EvalDAO extends ElasticDAO {
     public List<MultiStackedDataDTO> retrieveGraphData(final String graphType, final FilterDTO filterDTO) {
         QueryBuilder query = builFiltertQuery(filterDTO);
         return retrieveGraphData(graphType, query);
+    }
+
+    /**
+     * Delete the eval with a matching id.
+     * @param id id of the eval to delete
+     * @return deleted eval
+     */
+    public DeleteResponse deleteEvalById(final String id) {
+        DeleteResponse response = deleteEval(id);
+        return response;
     }
 
     /**

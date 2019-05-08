@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -143,7 +144,7 @@ public class EvalService {
         if (eval.getEvalId() == null || eval.getEvalId().contentEquals("")) {
             isErrorSet = true;
             result.setIsDone(false);
-            result.setMessage("Tentative de mise à jour d'une évaluation ne contenant pas d'ID.");
+            result.setMessage("Tentative de mise à jour d'une évaluation ne contenant pas ou ayany un ID inexistant.");
             LOG.warn("Attempt to update an eval without id: " + eval.toString());
         } else {
             isUpdated = evalDao.updateEval(eval);
@@ -162,5 +163,15 @@ public class EvalService {
             }
         }
         return result;
+    }
+
+    /**
+     * Delete eval with matching id.
+     * @param id id id of the queried eval.
+     * @return deleted eval.
+     */
+    public DeleteResponse deleteEval(final String id) {
+        DeleteResponse response = evalDao.deleteEvalById(id);
+        return response;
     }
 }

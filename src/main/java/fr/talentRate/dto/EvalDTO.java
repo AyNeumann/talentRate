@@ -1,6 +1,11 @@
 package fr.talentRate.dto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Validated
 public class EvalDTO {
     /** Default Evaluation size WITHOUT student size.*/
     protected static final int DEFAULT_EVAL_CHAR_SIZE = 256;
@@ -24,30 +30,43 @@ public class EvalDTO {
 
     /**Name of the school where the eval is done.*/
     @NotNull
+    @NotEmpty
+    @NotBlank
     private String school;
 
     /**Name of the module which is evaluated.*/
     @NotNull
+    @NotEmpty
+    @NotBlank
     private String module;
 
     /**Name of the promotion of the evaluated student.*/
     @NotNull
+    @NotEmpty
+    @NotBlank
     private String promotion;
 
     /**Category of evaluated skill.*/
     @NotNull
+    @NotEmpty
+    @NotBlank
     private String category;
 
     /**Skill name which is evaluated.*/
     @NotNull
+    @NotEmpty
+    @NotBlank
     private String skill;
 
     /**Name of the homework.*/
     @NotNull
+    @NotEmpty
+    @NotBlank
     private String homework;
 
     /** All student infos.*/
     @NotNull
+    @Valid
     private StudentDTO student;
 
     /** Number of point obtained by the student.*/

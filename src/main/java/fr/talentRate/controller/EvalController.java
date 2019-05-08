@@ -7,12 +7,15 @@ import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.talentRate.dto.EvalDTO;
 import fr.talentRate.dto.MultiStackedDataDTO;
+import fr.talentRate.exception.TalentRateInvalidParameterException;
 import fr.talentRate.service.EvalService;
 import fr.talentRate.validators.EvalValidator;
 
@@ -61,12 +65,21 @@ public class EvalController {
     @PostMapping("/")
     public EvalDTO createEval(@RequestBody @Valid final EvalDTO eval, final BindingResult result) {
         EvalDTO createdEval = new EvalDTO();
+        if (result.hasErrors()) {
+            LOG.info("Attempt to create an Eval with at least one required filed empty");
+            throw new TalentRateInvalidParameterException(result);
+        }
+        LOG.debug("createdeEval: " + eval);
+
+        //TODO transfert in Advice
         EvalValidator evalValidator = new EvalValidator();
+        createdEval.setIsDone(false);
+        createdEval.setMessage("Le Score ne peut être supérieur au Score Max");
+
         evalValidator.validate(eval, result);
         if (result.hasErrors()) {
-            createdEval.setIsDone(false);
-            createdEval.setMessage("Le Score ne peut être supérieur au Score Max");
             LOG.info("Attempt to create an Eval with a score superior to obtainable");
+            throw new TalentRateInvalidParameterException(result);
         } else {
             createdEval = evserv.create(eval);
         }
@@ -155,6 +168,17 @@ public class EvalController {
         }
 
         return updatedEval;
+    }
+
+    /**
+     * Delete eval with matching id.
+     * @param id id id of the queried eval.
+     * @return deleted eval.
+     */
+    @DeleteMapping("/{id}")
+    public DeleteResponse deleteEval(@PathVariable final String id) {
+        DeleteResponse response = evserv.deleteEval(id);
+        return response;
     }
 
     /**

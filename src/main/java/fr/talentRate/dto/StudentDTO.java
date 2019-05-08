@@ -15,6 +15,10 @@ limitations under the License.
  */
 package fr.talentRate.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
@@ -25,6 +29,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class StudentDTO {
 
     /** Student Full name. */
+    @NotNull
+    @NotEmpty
+    @NotBlank
     private String name;
 
     /** Minimal bytes size for a String representation of a student.*/
