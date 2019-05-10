@@ -7,10 +7,14 @@ import javax.annotation.PostConstruct;
 import org.apache.http.HttpHost;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -24,12 +28,15 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import fr.talentRate.Configuration;
+import fr.talentRate.dto.FilterDTO;
 
 /**
  * Elastic Data Access Object mother class.
@@ -105,6 +112,30 @@ public class ElasticDAO {
     }
 
     /**
+     * Delete eval with matching id.
+     * @param id id id of the queried eval.
+     * @return deleted eval
+     */
+    protected DeleteResponse deleteEval(final String id) {
+        DeleteRequest request = new DeleteRequest(elasticIndex, "_doc", id);
+        LOG.debug(request);
+        DeleteResponse deleteResponse = null;
+        try {
+            deleteResponse = client.delete(request, RequestOptions.DEFAULT);
+        } catch (IOException ioe) {
+            LOG.error("Error while deleting Eval with id : " + id, ioe);
+        }
+        RefreshRequest refreshRequest = new RefreshRequest(elasticIndex);
+        try {
+            client.indices().refresh(refreshRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return deleteResponse;
+    }
+
+    /**
      * Search Data with a (filter)query and an OPTIONNAL aggregation.
      * @param filterQuery the query to filter document
      * @param agg the OPTIONNAL aggregation
@@ -169,10 +200,12 @@ public class ElasticDAO {
 
         updateRequest.doc(docToUpdate, XContentType.JSON);
         try {
+            //TODO gérer defaut de DBB doit retourner false
             client.update(updateRequest, RequestOptions.DEFAULT);
             isUpdated = Boolean.TRUE;
         } catch (IOException ioe) {
             LOG.error("Error while mapping response ", ioe);
+            isUpdated = Boolean.FALSE;
         }
 
         return isUpdated;
@@ -268,6 +301,27 @@ public class ElasticDAO {
         LOG.debug("(Query) Request built : " + searchSourceBuilder);
 
         return searchRequest;
+    }
+
+    /**
+     * If . (dot) is present in searched field, convert the builder to a <b>Nested</b> Builder.
+     * @param filterDTO the filter DTO
+     * @param orinalQuery the term query to (optionally) convert
+     * @return a (new) QueryBuilder
+     */
+    protected QueryBuilder convertToNested(final FilterDTO filterDTO, final QueryBuilder orinalQuery) {
+        QueryBuilder fullQuery = null;
+        int dotPos = filterDTO.getField().lastIndexOf('.');
+        if (dotPos == -1) {
+            fullQuery = orinalQuery;
+        } else {
+            String prefix = filterDTO.getField().substring(0, dotPos);
+            NestedQueryBuilder nestedBuilder = QueryBuilders.nestedQuery(prefix, orinalQuery, ScoreMode.None);
+
+            fullQuery = nestedBuilder;
+        }
+
+        return fullQuery;
     }
 
     /**

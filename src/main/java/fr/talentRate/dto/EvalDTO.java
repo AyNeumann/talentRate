@@ -1,6 +1,10 @@
 package fr.talentRate.dto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,45 +16,86 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Validated
 public class EvalDTO {
     /** Default Evaluation size WITHOUT student size.*/
     protected static final int DEFAULT_EVAL_CHAR_SIZE = 256;
 
+    /** State DTO composition.*/
+    private StateDTO state;
+
+    /**Eval id.*/
+    private String evalId;
+
     /**Name of the school where the eval is done.*/
     @NotNull
+    @NotBlank
     private String school;
 
     /**Name of the module which is evaluated.*/
     @NotNull
+    @NotBlank
     private String module;
 
     /**Name of the promotion of the evaluated student.*/
     @NotNull
+    @NotBlank
     private String promotion;
 
     /**Category of evaluated skill.*/
     @NotNull
+    @NotBlank
     private String category;
 
     /**Skill name which is evaluated.*/
     @NotNull
+    @NotBlank
     private String skill;
 
     /**Name of the homework.*/
     @NotNull
+    @NotBlank
     private String homework;
 
     /** All student infos.*/
     @NotNull
+    @Valid
     private StudentDTO student;
 
     /** Number of point obtained by the student.*/
     @NotNull
-    private String score;
+    private Integer score;
 
     /** Maximum number of obtainable points.*/
     @NotNull
-    private String obtainable;
+    private Integer obtainable;
+
+    /** Eval date.*/
+    @NotNull
+    private Long given;
+
+    /** Default EvalDTO constructor. */
+    public EvalDTO() {
+        this.state = new StateDTO();
+    }
+
+    /**
+     * Initialize a new retrieve Eval DTO from a standard Eval DTO.
+     * @param sourceEvalDTO the Eval data without ID
+     */
+    public EvalDTO(final EvalDTO sourceEvalDTO) {
+        this.setSchool(sourceEvalDTO.getSchool());
+        this.setModule(sourceEvalDTO.getModule());
+        this.setPromotion(sourceEvalDTO.getPromotion());
+        this.setCategory(sourceEvalDTO.getCategory());
+        this.setSkill(sourceEvalDTO.getSkill());
+        this.setHomework(sourceEvalDTO.getHomework());
+        this.setStudent(sourceEvalDTO.getStudent());
+        this.setScore(sourceEvalDTO.getScore());
+        this.setObtainable(sourceEvalDTO.getObtainable());
+        this.setGiven(sourceEvalDTO.getGiven());
+        this.state = new StateDTO();
+    }
 
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -168,29 +213,85 @@ public class EvalDTO {
     /**
      * @return the score
      */
-    public String getScore() {
+    public Integer getScore() {
         return score;
     }
 
     /**
      * @param newScore the score to set
      */
-    public void setScore(final String newScore) {
+    public void setScore(final Integer newScore) {
         this.score = newScore;
     }
 
     /**
      * @return the obtainable
      */
-    public String getObtainable() {
+    public Integer getObtainable() {
         return obtainable;
     }
 
     /**
      * @param newObtainable the obtainable to set
      */
-    public void setObtainable(final String newObtainable) {
+    public void setObtainable(final Integer newObtainable) {
         this.obtainable = newObtainable;
+    }
+
+    /**
+     * @return the evalId
+     */
+    public String getEvalId() {
+        return evalId;
+    }
+
+    /**
+     * @param newEvalId the obtainable to set
+     */
+    public void setEvalId(final String newEvalId) {
+        this.evalId = newEvalId;
+    }
+
+    /**
+     * @return the asError
+     */
+    public Boolean getIsDone() {
+        return state.getIsDone();
+    }
+
+    /**
+     * @param newDone the asError to set
+     */
+    public void setIsDone(final Boolean newDone) {
+        state.setIsDone(newDone);
+    }
+
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+        return state.getMessage();
+    }
+
+    /**
+     * @param newMessage the message to set
+     */
+    public void setMessage(final String newMessage) {
+        state.setMessage(newMessage);
+    }
+
+    /**
+     * @return the given
+     */
+    public Long getGiven() {
+        return given;
+    }
+
+    /**
+     * @param newGiven the given to set
+     */
+    public void setGiven(final Long newGiven) {
+        this.given = newGiven;
     }
 
 }
