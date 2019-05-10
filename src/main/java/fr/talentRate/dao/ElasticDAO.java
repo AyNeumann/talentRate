@@ -12,6 +12,7 @@ import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -116,7 +117,6 @@ public class ElasticDAO {
      * @return deleted eval
      */
     protected DeleteResponse deleteEval(final String id) {
-        LOG.debug("Delete eval called in ElasticDAO");
         DeleteRequest request = new DeleteRequest(elasticIndex, "_doc", id);
         LOG.debug(request);
         DeleteResponse deleteResponse = null;
@@ -124,6 +124,13 @@ public class ElasticDAO {
             deleteResponse = client.delete(request, RequestOptions.DEFAULT);
         } catch (IOException ioe) {
             LOG.error("Error while deleting Eval with id : " + id, ioe);
+        }
+        RefreshRequest refreshRequest = new RefreshRequest(elasticIndex);
+        try {
+            client.indices().refresh(refreshRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return deleteResponse;
     }

@@ -39,6 +39,25 @@ public class TalentRateInvalidParameterException extends RuntimeException {
     }
 
     /**
+     * Create exception with default message to display to user.
+     * @param message Message to display to user
+     * @param bindingResult The spring Binding result
+     */
+    public TalentRateInvalidParameterException(final String message, final BindingResult bindingResult) {
+        super(message);
+        this.result = bindingResult;
+    }
+
+    /**
+     * Create exception with default message to display to user.
+     * @param message Message to display to user
+     */
+    public TalentRateInvalidParameterException(final String message) {
+        super(message);
+        this.result = null;
+    }
+
+    /**
      * @return the result
      */
     public BindingResult getResult() {

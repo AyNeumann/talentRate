@@ -64,18 +64,16 @@ public class EvalController {
      */
     @PostMapping("/")
     public EvalDTO createEval(@RequestBody @Valid final EvalDTO eval, final BindingResult result) {
-        EvalDTO createdEval = new EvalDTO();
+        LOG.debug("creatingeEval: " + eval);
+        EvalDTO createdEval;
+
         if (result.hasErrors()) {
-            LOG.info("Attempt to create an Eval with at least one required filed empty");
-            throw new TalentRateInvalidParameterException(result);
+            String message = "Attempt to create an Eval with at least one required filed empty";
+            LOG.info(message);
+            throw new TalentRateInvalidParameterException("Au moins un champs requis est vide", result);
         }
-        LOG.debug("createdeEval: " + eval);
 
-        //TODO transfert in Advice
         EvalValidator evalValidator = new EvalValidator();
-        createdEval.setIsDone(false);
-        createdEval.setMessage("Le Score ne peut être supérieur au Score Max");
-
         evalValidator.validate(eval, result);
         if (result.hasErrors()) {
             LOG.info("Attempt to create an Eval with a score superior to obtainable");
@@ -156,9 +154,13 @@ public class EvalController {
      */
     @PostMapping("/{id}")
     public EvalDTO updateEval(@RequestBody @Valid final EvalDTO eval, final BindingResult result) {
+        EvalDTO updatedEval = new EvalDTO();
+        if (result.hasErrors()) {
+            LOG.info("Attempt to modify an Eval with at least one required filed empty");
+            throw new TalentRateInvalidParameterException(result);
+        }
         EvalValidator evalValidator = new EvalValidator();
         evalValidator.validate(eval, result);
-        EvalDTO updatedEval = new EvalDTO();
         if (result.hasErrors()) {
             updatedEval.setIsDone(false);
             updatedEval.setMessage("Le Score ne peut être supérieur au Score Max");

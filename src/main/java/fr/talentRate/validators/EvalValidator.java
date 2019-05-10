@@ -31,7 +31,7 @@ public class EvalValidator {
     public void validate(final Object target, final Errors errors) {
         EvalDTO eval = (EvalDTO) target;
         if (eval.getScore() > eval.getObtainable()) {
-            errors.rejectValue("message", "ScoreError", "Le Score ne peut être supérieur au Score Max");
+            errors.rejectValue("score", "INV_EVAL_SCORE", "Le Score ne peut être supérieur au Score Max");
         }
     }
 

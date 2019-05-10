@@ -2,7 +2,6 @@ package fr.talentRate.dto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
@@ -30,37 +29,31 @@ public class EvalDTO {
 
     /**Name of the school where the eval is done.*/
     @NotNull
-    @NotEmpty
     @NotBlank
     private String school;
 
     /**Name of the module which is evaluated.*/
     @NotNull
-    @NotEmpty
     @NotBlank
     private String module;
 
     /**Name of the promotion of the evaluated student.*/
     @NotNull
-    @NotEmpty
     @NotBlank
     private String promotion;
 
     /**Category of evaluated skill.*/
     @NotNull
-    @NotEmpty
     @NotBlank
     private String category;
 
     /**Skill name which is evaluated.*/
     @NotNull
-    @NotEmpty
     @NotBlank
     private String skill;
 
     /**Name of the homework.*/
     @NotNull
-    @NotEmpty
     @NotBlank
     private String homework;
 
