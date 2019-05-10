@@ -1,5 +1,7 @@
 package fr.talentRate.dto;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -72,7 +74,7 @@ public class EvalDTO {
 
     /** Eval date.*/
     @NotNull
-    private Long given;
+    private Date given;
 
     /** Default EvalDTO constructor. */
     public EvalDTO() {
@@ -283,14 +285,14 @@ public class EvalDTO {
     /**
      * @return the given
      */
-    public Long getGiven() {
+    public Date getGiven() {
         return given;
     }
 
     /**
      * @param newGiven the given to set
      */
-    public void setGiven(final Long newGiven) {
+    public void setGiven(final Date newGiven) {
         this.given = newGiven;
     }
 
