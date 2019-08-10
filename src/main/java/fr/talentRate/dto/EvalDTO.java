@@ -255,13 +255,15 @@ public class EvalDTO {
     }
 
     /**
-     * @return the asError
+     * This parameter is an OUTPUT parameter.
+     * @return False if error occurs error (@see getMessage for more details)
      */
     public Boolean getIsDone() {
         return state.getIsDone();
     }
 
     /**
+     * This parameter is an OUTPUT parameter, should be NULL when send to server.
      * @param newDone the asError to set
      */
     public void setIsDone(final Boolean newDone) {
@@ -269,6 +271,7 @@ public class EvalDTO {
     }
 
     /**
+     * Contains details informations about the Eval operations.
      * @return the message
      */
     public String getMessage() {
@@ -276,6 +279,7 @@ public class EvalDTO {
     }
 
     /**
+     * This parameter is an OUTPUT parameter, should be NULL when send to server.
      * @param newMessage the message to set
      */
     public void setMessage(final String newMessage) {
