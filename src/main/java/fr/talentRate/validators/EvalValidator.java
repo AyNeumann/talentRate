@@ -13,7 +13,7 @@ import fr.talentRate.dto.EvalDTO;
  *
  */
 
-// TODO: enregistrer ce validator auprès de spring.
+// TODO enregistrer ce validator auprès de spring.
 public class EvalValidator {
 
     /**
