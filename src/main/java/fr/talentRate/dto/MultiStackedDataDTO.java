@@ -11,6 +11,9 @@ import javax.validation.constraints.NotNull;
  *
  */
 public class MultiStackedDataDTO {
+    /** Size of a single data.*/
+    protected static final int DEFAULT_DATA_DTO_SIZE = 128;
+
     /** Graph X axis item name.*/
     @NotNull
     private String name;

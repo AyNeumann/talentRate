@@ -8,10 +8,12 @@ import fr.talentRate.dto.EvalDTO;
 
 /**
  * Allows to check if the received eval is valid.
- * Check if every required input are completed and if obtainable is superior or equal to score.
+ * Check if obtainable is superior or equal to score.
  * @author Aymeric
  *
  */
+
+// TODO: enregistrer ce validator auprès de spring.
 public class EvalValidator {
 
     /**

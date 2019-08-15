@@ -59,25 +59,25 @@ public class EvalController {
     /**
      * Post mapping to create an evals in the database.
      * @param eval evalDTO reference.
-     * @param result ????
+     * @param bindingResult general interface that represents binding results for error registration.
      * @return a StateDTO containing status of the createEval and the id of the eval as message.
      */
-    @PostMapping("/")
-    public EvalDTO createEval(@RequestBody @Valid final EvalDTO eval, final BindingResult result) {
+    @PostMapping("")
+    public EvalDTO createEval(@RequestBody @Valid final EvalDTO eval, final BindingResult bindingResult) {
         LOG.debug("creatingeEval: " + eval);
         EvalDTO createdEval;
 
-        if (result.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             String message = "Attempt to create an Eval with at least one required filed empty";
             LOG.info(message);
-            throw new TalentRateInvalidParameterException("Au moins un champs requis est vide", result);
+            throw new TalentRateInvalidParameterException("Au moins un champs requis est vide", bindingResult);
         }
 
         EvalValidator evalValidator = new EvalValidator();
-        evalValidator.validate(eval, result);
-        if (result.hasErrors()) {
+        evalValidator.validate(eval, bindingResult);
+        if (bindingResult.hasErrors()) {
             LOG.info("Attempt to create an Eval with a score superior to obtainable");
-            throw new TalentRateInvalidParameterException(result);
+            throw new TalentRateInvalidParameterException(bindingResult);
         } else {
             createdEval = evserv.create(eval);
         }
@@ -91,7 +91,7 @@ public class EvalController {
      * @param data value of the field in elasticsearch.
      * @return evals matching with parameters as List of EvalDTO.
      */
-    @GetMapping("/")
+    @GetMapping("")
     public List<EvalDTO> searchEval(@RequestParam(name = "field", required = false) final String field,
             @RequestParam(name = "data", required = false) final String data) {
 
@@ -133,7 +133,6 @@ public class EvalController {
             @RequestParam(name = "data", required = false) final String data,
             @RequestParam(name = "graphType", required = true) final String graphType) {
         List<MultiStackedDataDTO> result = new ArrayList<>();
-        //List<MultiStackedDataDTO> listResult = new ArrayList<>();
         if (field != null && data != null) {
             LOG.debug("retrieveGraphData called, field and data are NOT null");
             result = evserv.retrieveGraphData(field, data, graphType);

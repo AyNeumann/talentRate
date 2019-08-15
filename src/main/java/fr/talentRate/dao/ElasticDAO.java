@@ -60,7 +60,7 @@ public class ElasticDAO {
     /** Name of the elasticSearch index. */
     private String elasticIndex;
 
-    /** Elastic Authen,tification callback. **/
+    /** Elastic Authentification callback. **/
     @Autowired
     private TalentRateAuthCallback callBack;
 
@@ -76,7 +76,7 @@ public class ElasticDAO {
     }
 
     /**
-     * Retrieve DATA form an Idenx with an Id.
+     * Retrieve DATA form an Index with an Id.
      * @param id id of document to retrieve
      * @return the Response or NULL if error occurs
      */
@@ -103,7 +103,7 @@ public class ElasticDAO {
     }
 
     /**
-     * Search for documents using aggregations and filters.
+     * Search for documents using filters.
      * @param filterQuery The filter
      * @return The response or NULL if errors occurs
      */
@@ -112,9 +112,9 @@ public class ElasticDAO {
     }
 
     /**
-     * Delete eval with matching id.
-     * @param id id id of the queried eval.
-     * @return deleted eval
+     * Delete document with matching id.
+     * @param id id of the queried document.
+     * @return deleteResponse ElsaticSearch response Object.
      */
     protected DeleteResponse deleteEval(final String id) {
         DeleteRequest request = new DeleteRequest(elasticIndex, "_doc", id);
@@ -265,7 +265,7 @@ public class ElasticDAO {
         searchSourceBuilder.aggregation(builder);
         searchRequest.source(searchSourceBuilder);
 
-        LOG.debug("(Agregation) Request built : " + searchSourceBuilder);
+        LOG.debug("(Aggregation) Request built : " + searchSourceBuilder);
 
         return searchRequest;
     }

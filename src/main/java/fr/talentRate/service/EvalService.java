@@ -116,7 +116,6 @@ public class EvalService {
         filterDto.setValue(data);
         filterDto.setGraphType(graphType);
 
-        //TODO Pourquoi passer "grahType" en paramètre alors qu'il est DANS le DTO
         return evalDao.retrieveGraphData(graphType, filterDto);
     }
 
@@ -144,7 +143,7 @@ public class EvalService {
         if (eval.getEvalId() == null || eval.getEvalId().contentEquals("")) {
             isErrorSet = true;
             result.setIsDone(false);
-            result.setMessage("Tentative de mise à jour d'une évaluation ne contenant pas ou ayany un ID inexistant.");
+            result.setMessage("Tentative de mise à jour d'une évaluation ne contenant pas ou ayant un ID inexistant.");
             LOG.warn("Attempt to update an eval without id: " + eval.toString());
         } else {
             isUpdated = evalDao.updateEval(eval);
