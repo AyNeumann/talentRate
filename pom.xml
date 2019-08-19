@@ -82,7 +82,15 @@
 		<dependency>
 			<groupId>org.keycloak</groupId>
 			<artifactId>keycloak-spring-boot-starter</artifactId>
-		</dependency>	
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
+		<!-- <dependency> <groupId>org.elasticsearch.test</groupId> <artifactId>framework</artifactId> 
+			<version>${elasticsearch.version}</version> <scope>test</scope> </dependency> -->
 	</dependencies>
 	
 	<dependencyManagement>
@@ -97,7 +105,7 @@
 	  </dependencies>
 	</dependencyManagement>
 
-		<build>
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -213,6 +221,4 @@
 		</plugins>
 	</reporting>
 </project>
-
-
 

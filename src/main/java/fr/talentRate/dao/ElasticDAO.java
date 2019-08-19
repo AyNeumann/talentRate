@@ -3,6 +3,7 @@ package fr.talentRate.dao;
 import java.io.IOException;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.apache.http.HttpHost;
 import org.apache.logging.log4j.LogManager;
@@ -347,6 +348,7 @@ public class ElasticDAO {
     /**
      * Close elasticsearch client.
      */
+    @PreDestroy
     public void closeClient() {
         try {
             client.close();
