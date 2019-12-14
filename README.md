@@ -100,3 +100,19 @@
 }
 
 ```
+
+
+## Config
+
+To use custom configuration : ``java -jar server-0.0.1-SNAPSHOT.jar --spring.config.location=file:xxxxx.properties``
+
+More info about properties with SpringFramework here : https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-application-property-files.
+
+This file should be simillar to the src/main/ressources/application.properties.
+
+### Custom Front-end
+for apache Proxy configure the front-end url to allow corss origin configuration 
+```
+#The Front-End URL
+fe-info.cross=http://talentrate.clicketcloud.com
+```
