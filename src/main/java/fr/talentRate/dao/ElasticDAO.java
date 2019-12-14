@@ -129,9 +129,8 @@ public class ElasticDAO {
         RefreshRequest refreshRequest = new RefreshRequest(elasticIndex);
         try {
             client.indices().refresh(refreshRequest, RequestOptions.DEFAULT);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (IOException ioe) {
+            LOG.error("Error while deleting Eval with id : " + id, ioe);
         }
         return deleteResponse;
     }
@@ -205,7 +204,7 @@ public class ElasticDAO {
             client.update(updateRequest, RequestOptions.DEFAULT);
             isUpdated = Boolean.TRUE;
         } catch (IOException ioe) {
-            LOG.error("Error while mapping response ", ioe);
+            LOG.error("Error while updating ocument with ID : " + id, ioe);
             isUpdated = Boolean.FALSE;
         }
 
@@ -243,8 +242,8 @@ public class ElasticDAO {
         CreateIndexResponse createIndexResponse = null;
         try {
             createIndexResponse = client.indices().create(requestCreateIndex, RequestOptions.DEFAULT);
-        } catch (IOException e1) {
-            LOG.error("No index response, index has not been created", e1);
+        } catch (IOException ioe) {
+            LOG.error("No index response, index has not been created", ioe);
         }
 
         if (null != createIndexResponse && createIndexResponse.isAcknowledged()) {
@@ -339,14 +338,14 @@ public class ElasticDAO {
             LOG.debug("Number of hits : " + searchScrollResponse.getHits().getTotalHits() + " with scroll ID : "
                     + searchScrollResponse.getScrollId());
         } catch (IOException ioe) {
-            LOG.error("Error while mapping response ", ioe);
+            LOG.error("Error while searching documents (using Scroll ID : " + scrollId, ioe);
         }
 
         return searchScrollResponse;
     }
 
     /**
-     * Close elasticsearch client.
+     * Close elasticSearch client.
      */
     @PreDestroy
     public void closeClient() {

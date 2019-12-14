@@ -80,7 +80,7 @@ public class EvalDAO extends ElasticDAO {
      * @return all evals matching with query
      */
     public List<EvalDTO> searchEval(final FilterDTO filterDTO) {
-        QueryBuilder fullQuery = builtQuery(filterDTO);
+        QueryBuilder fullQuery = buildQuery(filterDTO);
         return executeSearch(fullQuery);
     }
 
@@ -89,8 +89,8 @@ public class EvalDAO extends ElasticDAO {
      * @param filterDTO filters params
      * @return Valid query to filter datas
      */
-    private QueryBuilder builtQuery(final FilterDTO filterDTO) {
-        return builtQuery(filterDTO, false);
+    private QueryBuilder buildQuery(final FilterDTO filterDTO) {
+        return buildQuery(filterDTO, false);
     }
 
     /**
@@ -99,7 +99,7 @@ public class EvalDAO extends ElasticDAO {
      * @param convertDotToNested does the . (dot) apply to a <b>Nested</b> Query ?
      * @return Valid query to filter datas
      */
-    private QueryBuilder builtQuery(final FilterDTO filterDTO, final Boolean convertDotToNested) {
+    private QueryBuilder buildQuery(final FilterDTO filterDTO, final Boolean convertDotToNested) {
         TermQueryBuilder termQuery = QueryBuilders.termQuery(filterDTO.getField() + ".keyword", filterDTO.getValue());
 
         QueryBuilder fullQuery = null;
@@ -116,8 +116,8 @@ public class EvalDAO extends ElasticDAO {
      * @param filterDTO filters params
      * @return Valid query to filter datas
      */
-    private QueryBuilder builFiltertQuery(final FilterDTO filterDTO) {
-        return builFiltertQuery(filterDTO, false);
+    private QueryBuilder buildFiltertQuery(final FilterDTO filterDTO) {
+        return buildFiltertQuery(filterDTO, false);
     }
 
     /**
@@ -126,7 +126,7 @@ public class EvalDAO extends ElasticDAO {
      * @param convertDotToNested does the . (dot) apply to a <b>Nested</b> Query ?
      * @return Valid query to filter datas
      */
-    private QueryBuilder builFiltertQuery(final FilterDTO filterDTO, final Boolean convertDotToNested) {
+    private QueryBuilder buildFiltertQuery(final FilterDTO filterDTO, final Boolean convertDotToNested) {
         BoolQueryBuilder filterQuery = QueryBuilders.boolQuery()
                 .must(QueryBuilders.matchQuery(filterDTO.getField() + ".keyword", filterDTO.getValue()));
 
@@ -197,7 +197,7 @@ public class EvalDAO extends ElasticDAO {
      * @return structured datas
      */
     public List<MultiStackedDataDTO> retrieveGraphData(final String graphType, final FilterDTO filterDTO) {
-        QueryBuilder query = builFiltertQuery(filterDTO);
+        QueryBuilder query = buildFiltertQuery(filterDTO);
         return retrieveGraphData(graphType, query);
     }
 
@@ -272,7 +272,7 @@ public class EvalDAO extends ElasticDAO {
             searchResponse = scrollData(searchResponse.getScrollId());
         } while (searchResponse.getHits().getHits().length > 0);
 
-        LOG.debug(evalData);
+        LOG.debug("Data found by Search with Query  : " + query + " ==== " + evalData);
         return evalData;
     }
 

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class IndexDAO extends ElasticDAO {
 
     /**
-     * create the index if it's not already exist in the elasticsearch Database.
+     * create the index if it's not already exist in the ElasticSearch Database.
      * @param indexName name of the index to create.
      */
     public void createIfNotExists(final String indexName) {

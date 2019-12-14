@@ -28,8 +28,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -89,8 +87,8 @@ public class EvalControllerIT {
         StudentDTO newStudent = new StudentDTO("BOB gertrude");
         testEval.setStudent(newStudent);
 
-        DataBinder dataBinder = new DataBinder(null);
-        BindingResult br = dataBinder.getBindingResult();
+        //DataBinder dataBinder = new DataBinder(null);
+        //BindingResult br = dataBinder.getBindingResult();
 
         //2- test a method and Check
         mvc.perform(MockMvcRequestBuilders.post("/eval/").contentType(MediaType.APPLICATION_JSON)

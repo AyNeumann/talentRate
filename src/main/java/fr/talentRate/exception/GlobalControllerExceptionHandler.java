@@ -34,7 +34,7 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(TalentRateInvalidParameterException.class)
     @ResponseBody
     public EvalDTO handleInvalidPaeameter(final TalentRateInvalidParameterException trInvParamException) {
-        LOG.debug(trInvParamException.getResult());
+        LOG.debug("Invalid parameter(s) detected with error : " + trInvParamException.getResult());
         BindingResult bindigResult = trInvParamException.getResult();
         EvalDTO errorEval = new EvalDTO();
         errorEval.setIsDone(false);
@@ -43,8 +43,8 @@ public class GlobalControllerExceptionHandler {
 
         StringBuilder sb = new StringBuilder(MINIMAL_ERRORS_MESSAGE_SIZE);
 
-        sb.append(errorEval.getMessage()).append(" ").append(bindigResult.getErrorCount()).append(" erreur(s) : ");
-        LOG.debug(bindigResult);
+        sb.append(errorEval.getMessage()).append(' ').append(bindigResult.getErrorCount()).append(" erreur(s) : ");
+        LOG.debug("BidningResult value : " + bindigResult);
 
         List<ObjectError> eroors = bindigResult.getAllErrors();
 
