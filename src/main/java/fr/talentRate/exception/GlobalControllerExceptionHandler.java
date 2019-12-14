@@ -43,7 +43,7 @@ public class GlobalControllerExceptionHandler {
 
         StringBuilder sb = new StringBuilder(MINIMAL_ERRORS_MESSAGE_SIZE);
 
-        sb.append(errorEval.getMessage()).append(bindigResult.getErrorCount()).append(" erreur(s) : ");
+        sb.append(errorEval.getMessage()).append(" ").append(bindigResult.getErrorCount()).append(" erreur(s) : ");
         LOG.debug(bindigResult);
 
         List<ObjectError> eroors = bindigResult.getAllErrors();
