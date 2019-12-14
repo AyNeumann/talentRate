@@ -1,6 +1,8 @@
 # talentRate
 
 ## Required elastic mapping:
+Use Elastic API : ``PUT /eval6``
+
 *** Warning to creeate an index do not forget the 's' at mappings ! ***
 ```
 {
