@@ -15,10 +15,14 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 /**
  * @author djer1
@@ -41,6 +45,14 @@ public class Skill {
     private Integer intermediaryThreshold;
     /** The skill **global** maximum threshold.*/
     private Integer maximumThreshold;
+
+    /** All instructor who can train student for this Skill.*/
+    @ManyToMany
+    private List<Instructor> instructors;
+
+    /** Possible training (link to the LearningPath, with an achievable threshold).*/
+    @OneToMany(mappedBy = "skill")
+    private List<Train> teachedIn;
 
     /**
      * @return the id
@@ -125,4 +137,42 @@ public class Skill {
     public void setMaximumThreshold(final Integer newMaximumThreshold) {
         this.maximumThreshold = newMaximumThreshold;
     }
+
+    /**
+     * @return the instructors
+     */
+    public List<Instructor> getInstructors() {
+        return instructors;
+    }
+
+    /**
+     * @param newInstructors the instructors to set
+     */
+    public void setInstructors(final List<Instructor> newInstructors) {
+        this.instructors = newInstructors;
+    }
+
+    /**
+     * Add an instructor for this Skill.
+     * @param instructor the instructor who an teach this skill
+     */
+    public void addInstructor(final Instructor instructor) {
+        this.instructors.add(instructor);
+        instructor.addInstructed(this);
+    }
+
+    /**
+     * @return the teachedIn
+     */
+    public List<Train> getTeachedIn() {
+        return teachedIn;
+    }
+
+    /**
+     * @param newTeachedIn the teachedIn to set
+     */
+    public void setTeachedIn(final List<Train> newTeachedIn) {
+        this.teachedIn = newTeachedIn;
+    }
+
 }

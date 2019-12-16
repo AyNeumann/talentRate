@@ -15,6 +15,7 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * Allow to create group of students over time.
@@ -45,6 +47,10 @@ public class Promotion {
     /** The Learning Path of this promotion.*/
     @ManyToOne
     private LearningPath enrolled;
+
+    /** Courses available for this promotion.*/
+    @OneToMany
+    private List<Course> courses;
 
     /**
      * @return the id
@@ -109,6 +115,20 @@ public class Promotion {
      */
     public void setEnrolled(final LearningPath newLearningPath) {
         this.enrolled = newLearningPath;
+    }
+
+    /**
+     * @return the courses
+     */
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    /**
+     * @param newCourses the courses to set
+     */
+    public void setCourses(final List<Course> newCourses) {
+        this.courses = newCourses;
     }
 
 }

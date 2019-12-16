@@ -21,25 +21,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 
 /**
- * Regroup informations about à learning Path.
+ * A test to check Student progression.
  * @author djer13
  */
 @Entity
-public class LearningPath {
+public class Test {
 
-    /** learning path ID.*/
+    /** Test Id.*/
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    /**Learning path name. Ex "House of Code".*/
+    /** test Name. */
     private String name;
 
-    /** Training of this LearningPath.*/
-    @OneToMany(mappedBy = "learningPath")
-    private List<Train> trained;
+    /** Instructor who plan this Test.*/
+    @ManyToOne
+    private Instructor creator;
+
+    /** all skill checkd by this Test.*/
+    @ManyToOne
+    private List<Control> controls;
 
     /**
      * @return the id
@@ -70,39 +74,40 @@ public class LearningPath {
     }
 
     /**
-     * @return the trained
+     * @return the creator
      */
-    public List<Train> getTrained() {
-        return trained;
+    public Instructor getCreator() {
+        return creator;
     }
 
     /**
-     * @param newTrained the trained to set
+     * @param newCreator the creator to set
      */
-    public void setTrained(final List<Train> newTrained) {
-        this.trained = newTrained;
+    public void setCreator(final Instructor newCreator) {
+        this.creator = newCreator;
     }
 
     /**
-     * Add a trainable Skill (with an achievable threshold). You should use addSkill instead of this low level method.
-     * @param train a trainable Skill;
+     * @return the controls
      */
-    public void addTrained(final Train train) {
-        this.trained.add(train);
-        train.setLearningPath(this);
+    public List<Control> getControls() {
+        return controls;
     }
 
     /**
-     * Add a skill to this LearningPath with an achievable threshold.
-     * @param skill The skill to be learned
-     * @param achievableThreshold the maximum level attainable
+     * @param newControls the controls to set
      */
-    public void addSkill(final Skill skill, final Integer achievableThreshold) {
-        Train train = new Train();
-        train.setSkill(skill);
-        train.setAchievableThreshold(achievableThreshold);
+    public void setControls(final List<Control> newControls) {
+        this.controls = newControls;
+    }
 
-        addTrained(train);
+    /**
+     * A Skill checked in this Test.
+     * @param control the control point
+     */
+    public void addControl(final Control control) {
+        this.controls.add(control);
+        control.setTest(this);
     }
 
 }

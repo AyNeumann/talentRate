@@ -24,22 +24,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
- * Regroup informations about à learning Path.
- * @author djer13
+ * @author djer1
+ *
  */
 @Entity
-public class LearningPath {
+public class ActivityKind {
 
-    /** learning path ID.*/
+    /** Activity Id.*/
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    /**Learning path name. Ex "House of Code".*/
+    /** Activity Name. */
     private String name;
 
-    /** Training of this LearningPath.*/
-    @OneToMany(mappedBy = "learningPath")
-    private List<Train> trained;
+    /** All course of this Kind.*/
+    @OneToMany(mappedBy = "kind")
+    private List<Course> courses;
 
     /**
      * @return the id
@@ -70,39 +70,17 @@ public class LearningPath {
     }
 
     /**
-     * @return the trained
+     * @return the courses
      */
-    public List<Train> getTrained() {
-        return trained;
+    public List<Course> getCourses() {
+        return courses;
     }
 
     /**
-     * @param newTrained the trained to set
+     * @param newCourses the courses to set
      */
-    public void setTrained(final List<Train> newTrained) {
-        this.trained = newTrained;
-    }
-
-    /**
-     * Add a trainable Skill (with an achievable threshold). You should use addSkill instead of this low level method.
-     * @param train a trainable Skill;
-     */
-    public void addTrained(final Train train) {
-        this.trained.add(train);
-        train.setLearningPath(this);
-    }
-
-    /**
-     * Add a skill to this LearningPath with an achievable threshold.
-     * @param skill The skill to be learned
-     * @param achievableThreshold the maximum level attainable
-     */
-    public void addSkill(final Skill skill, final Integer achievableThreshold) {
-        Train train = new Train();
-        train.setSkill(skill);
-        train.setAchievableThreshold(achievableThreshold);
-
-        addTrained(train);
+    public void setCourses(final List<Course> newCourses) {
+        this.courses = newCourses;
     }
 
 }
