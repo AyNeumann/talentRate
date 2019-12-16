@@ -18,11 +18,11 @@ package fr.talentRate.controller.dao.repository;
 import java.text.ParseException;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.talentRate.dao.repository.LearningPathRepository;
@@ -37,28 +37,27 @@ import fr.talentRate.dto.plan.Promotion;
 @DataJpaTest
 public class LearningPathRepositoryIT {
 
+    /** To access other repositories not under tests.*/
+    @Autowired
+    private TestEntityManager entityManager;
+
     /** Manage Learning Path.*/
     @Autowired
     private LearningPathRepository learningPathRepo;
 
     /** To get default Data.*/
-    private DefaultDataHelper dataIntializer = new DefaultDataHelper();
-
-    /**
-     * Initialize default Data required for tests.
-     * @throws ParseException if birth Dates are invalids
-     */
-    @BeforeClass
-    public void initData() throws ParseException {
-        dataIntializer.initInstructor();
-        dataIntializer.initSkills();
-    }
+    private DefaultDataHelper dataIntializer;
 
     /**
      * Check creation a LearningPath with trainable Skills.
+     * @throws ParseException when Birth Date format is invalid
      */
     @Test
-    public void testCreateLearningPath() {
+    public void testCreateLearningPath() throws ParseException {
+
+        dataIntializer = new DefaultDataHelper(entityManager);
+        dataIntializer.initInstructor();
+        dataIntializer.initSkills();
 
         final Integer hocJavaThreshold = 120;
         final Integer hocPhpThreshold = 30;
@@ -76,9 +75,9 @@ public class LearningPathRepositoryIT {
         promoSaintEtienne2019.setName("House of Code Saint-Etienne 2019");
         promoSaintEtienne2019.setEnrolled(houseOfCode);
 
-        learningPathRepo.save(houseOfCode);
+        LearningPath createLearningPath = learningPathRepo.save(houseOfCode);
 
-        Assert.assertEquals("Bad number of trainned Skills in Learning Path", houseOfCode.getTrained().size(),
+        Assert.assertEquals("Bad number of trainned Skills in Learning Path", createLearningPath.getTrained().size(),
                 hocNumberofSkills);
 
     }

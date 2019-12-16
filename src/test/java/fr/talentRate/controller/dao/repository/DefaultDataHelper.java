@@ -19,8 +19,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.stereotype.Service;
 
 import fr.talentRate.dto.plan.Instructor;
 import fr.talentRate.dto.plan.LearningPath;
@@ -29,17 +29,16 @@ import fr.talentRate.dto.plan.Skill;
 import fr.talentRate.dto.plan.Student;
 
 /**
- * @author djer1
- *
+ * @author djer13
  */
+@Service
 public class DefaultDataHelper {
 
-    /** To access other repositories not under tests.*/
-    @Autowired
-    private TestEntityManager entityManager;
-
     /** Default Birth Date formatter. */
-    private DateFormat birthDateFormatter = new SimpleDateFormat("yyyy-MM-dd");;
+    private DateFormat birthDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
+    /** local EntityManager to manage data. */
+    private TestEntityManager entityManager;;
 
     /** Institute minimum HTML.*/
     private static final int INSTITUTE_MIN_HTML = 10;
@@ -96,6 +95,14 @@ public class DefaultDataHelper {
     public static final Student MAT = new Student();
     /** A Lazy student.*/
     public static final Student SLACKER = new Student();
+
+    /**
+     * Create an instance.
+     * @param em EntityManager to manage data
+     */
+    public DefaultDataHelper(final TestEntityManager em) {
+        this.entityManager = em;
+    }
 
     /**
      * Initialize default Data required for tests (instructors).

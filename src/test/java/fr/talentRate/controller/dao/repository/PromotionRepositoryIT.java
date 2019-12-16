@@ -18,11 +18,11 @@ package fr.talentRate.controller.dao.repository;
 import java.text.ParseException;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.talentRate.dao.repository.PromotionRepository;
@@ -36,40 +36,40 @@ import fr.talentRate.dto.plan.Promotion;
 @DataJpaTest
 public class PromotionRepositoryIT {
 
-    /** Manage Learning Path.*/
+    /** To access other repositories not under tests.*/
+    @Autowired
+    private TestEntityManager entityManager;
+
+    /** Manage Promotions.*/
     @Autowired
     private PromotionRepository promotionRepo;
 
     /** To get default Data.*/
-    private DefaultDataHelper dataIntializer = new DefaultDataHelper();
+    private DefaultDataHelper dataIntializer;
 
-    /**
-     * Initialize default Data required for tests.
-     * @throws ParseException if birth Dates are invalids
-     */
-    @BeforeClass
-    public void initData() throws ParseException {
+    /** Check Promotion creation.
+     * @throws ParseException when Birth Date format is invalid */
+    @Test
+    public void testCreatePromotion() throws ParseException {
+        dataIntializer = new DefaultDataHelper(entityManager);
         dataIntializer.initInstructor();
         dataIntializer.initSkills();
         dataIntializer.initLearningPath();
         //dataIntializer.initStudents();
-    }
 
-    /** Check Promotion creation. */
-    @Test
-    public void testCreatePromotion() {
         final int hocNumberOfStudent = 3;
 
         Promotion promoSaintEtienne2019 = new Promotion();
         promoSaintEtienne2019.setName("House of Code Saint-Etienne 2019");
+        promoSaintEtienne2019.setEnrolled(DefaultDataHelper.HOC);
         promoSaintEtienne2019.addStudent(DefaultDataHelper.SEB);
         promoSaintEtienne2019.addStudent(DefaultDataHelper.MAT);
         promoSaintEtienne2019.addStudent(DefaultDataHelper.VI);
 
-        promotionRepo.save(promoSaintEtienne2019);
+        Promotion createdPromotion = promotionRepo.save(promoSaintEtienne2019);
 
-        Assert.assertEquals("Bad number of trainned Skills in Learning Path",
-                promoSaintEtienne2019.getStudents().size(), hocNumberOfStudent);
+        Assert.assertEquals("Bad number of trainned Skills in Learning Path", createdPromotion.getStudents().size(),
+                hocNumberOfStudent);
 
     }
 

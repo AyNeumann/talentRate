@@ -17,7 +17,6 @@ package fr.talentRate.dto.plan;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -50,7 +49,7 @@ public class Instructor {
 
     /** Skill this instructor can teach.*/
     @ManyToMany(mappedBy = "instructors")
-    private List<Skill> instructed;
+    private Set<Skill> instructed;
 
     /** Test created by this instructor. */
     @OneToMany(mappedBy = "creator")
@@ -110,7 +109,7 @@ public class Instructor {
     }
 
     /**
-     * @param newBirthdate the birthdate to set
+     * @param newBirthdate the birth date to set
      */
     public void setBirthdate(final Date newBirthdate) {
         this.birthdate = newBirthdate;
@@ -119,14 +118,14 @@ public class Instructor {
     /**
      * @return the instructed
      */
-    public List<Skill> getInstructed() {
+    public Set<Skill> getInstructed() {
         return instructed;
     }
 
     /**
      * @param newInstructed the instructed to set
      */
-    public void setInstructed(final List<Skill> newInstructed) {
+    public void setInstructed(final Set<Skill> newInstructed) {
         this.instructed = newInstructed;
     }
 
@@ -135,6 +134,9 @@ public class Instructor {
      * @param skill the Skill
      */
     public void addInstructed(final Skill skill) {
+        if (null == this.instructed) {
+            this.instructed = new HashSet<>();
+        }
         this.instructed.add(skill);
         skill.addInstructor(this);
     }

@@ -158,11 +158,22 @@ public class Skill {
      * @param instructor the instructor who an teach this skill
      */
     public void addInstructor(final Instructor instructor) {
+        addInstructor(instructor, Boolean.FALSE);
+    }
+
+    /**
+     * Add an instructor for this Skill.
+     * @param instructor the instructor who an teach this skill
+     * @param insertBackLink insert Link to this Skill for the instructor.
+     */
+    public void addInstructor(final Instructor instructor, final Boolean insertBackLink) {
         if (null == this.instructors) {
             this.instructors = new HashSet<>();
         }
         this.instructors.add(instructor);
-        instructor.addInstructed(this);
+        if (insertBackLink) {
+            instructor.addInstructed(this);
+        }
     }
 
     /**
