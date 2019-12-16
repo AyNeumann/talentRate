@@ -35,7 +35,7 @@ import fr.talentRate.dto.plan.Promotion;
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class RelationnalDataBaseIT {
+public class LearningPathRepositoryIT {
 
     /** Manage Learning Path.*/
     @Autowired
