@@ -34,16 +34,20 @@ public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /** Activity description. */
     private String description;
+
     /** Activity start Date and Time.*/
     private Date startDate;
+
     /** Activity end Date and Time.*/
     private Date endDate;
 
     /** Activity belong to this course.*/
     @ManyToOne
     private Course course;
+
     /** Kind of activity. */
     @ManyToOne
     private ActivityKind kind;

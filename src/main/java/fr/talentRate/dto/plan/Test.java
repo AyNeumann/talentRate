@@ -15,13 +15,15 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * A test to check Student progression.
@@ -34,6 +36,7 @@ public class Test {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /** test Name. */
     private String name;
 
@@ -41,9 +44,9 @@ public class Test {
     @ManyToOne
     private Instructor creator;
 
-    /** all skill checkd by this Test.*/
-    @ManyToOne
-    private List<Control> controls;
+    /** All skill checked by this test.*/
+    @OneToMany
+    private Set<Control> controls;
 
     /**
      * @return the id
@@ -90,14 +93,14 @@ public class Test {
     /**
      * @return the controls
      */
-    public List<Control> getControls() {
+    public Set<Control> getControls() {
         return controls;
     }
 
     /**
      * @param newControls the controls to set
      */
-    public void setControls(final List<Control> newControls) {
+    public void setControls(final Set<Control> newControls) {
         this.controls = newControls;
     }
 
@@ -106,6 +109,9 @@ public class Test {
      * @param control the control point
      */
     public void addControl(final Control control) {
+        if (null == this.controls) {
+            this.controls = new HashSet<>();
+        }
         this.controls.add(control);
         control.setTest(this);
     }

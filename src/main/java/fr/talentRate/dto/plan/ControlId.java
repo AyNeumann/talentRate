@@ -15,17 +15,23 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
+import java.io.Serializable;
+
 import javax.persistence.ManyToOne;
 
 /**
  * Control Id.
  * @author djer13
  */
-public class ControlId {
+public class ControlId implements Serializable {
+
+    /**serialVersionUID. */
+    private static final long serialVersionUID = 6953141533093695795L;
 
     /** A Skill. */
     @ManyToOne
     private Skill skill;
+
     /** A Test. */
     @ManyToOne
     private Test test;

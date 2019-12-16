@@ -15,7 +15,8 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,11 +49,11 @@ public class Skill {
 
     /** All instructor who can train student for this Skill.*/
     @ManyToMany
-    private List<Instructor> instructors;
+    private Set<Instructor> instructors;
 
     /** Possible training (link to the LearningPath, with an achievable threshold).*/
     @OneToMany(mappedBy = "skill")
-    private List<Train> teachedIn;
+    private Set<Train> teachedIn;
 
     /**
      * @return the id
@@ -141,14 +142,14 @@ public class Skill {
     /**
      * @return the instructors
      */
-    public List<Instructor> getInstructors() {
+    public Set<Instructor> getInstructors() {
         return instructors;
     }
 
     /**
      * @param newInstructors the instructors to set
      */
-    public void setInstructors(final List<Instructor> newInstructors) {
+    public void setInstructors(final Set<Instructor> newInstructors) {
         this.instructors = newInstructors;
     }
 
@@ -157,6 +158,9 @@ public class Skill {
      * @param instructor the instructor who an teach this skill
      */
     public void addInstructor(final Instructor instructor) {
+        if (null == this.instructors) {
+            this.instructors = new HashSet<>();
+        }
         this.instructors.add(instructor);
         instructor.addInstructed(this);
     }
@@ -164,14 +168,14 @@ public class Skill {
     /**
      * @return the teachedIn
      */
-    public List<Train> getTeachedIn() {
+    public Set<Train> getTeachedIn() {
         return teachedIn;
     }
 
     /**
      * @param newTeachedIn the teachedIn to set
      */
-    public void setTeachedIn(final List<Train> newTeachedIn) {
+    public void setTeachedIn(final Set<Train> newTeachedIn) {
         this.teachedIn = newTeachedIn;
     }
 

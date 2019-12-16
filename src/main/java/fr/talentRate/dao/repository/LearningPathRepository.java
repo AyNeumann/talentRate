@@ -21,7 +21,7 @@ import fr.talentRate.dto.plan.LearningPath;
 
 /**
  * Manage Learning Paths.
- * @author djer1
+ * @author djer13
  */
 //@RepositoryRestResource(collectionResourceRel = "learningPath", path = "learningPath")
 public interface LearningPathRepository extends PagingAndSortingRepository<LearningPath, Long> {

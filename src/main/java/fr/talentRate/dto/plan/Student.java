@@ -1,6 +1,7 @@
 package fr.talentRate.dto.plan;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -106,6 +107,9 @@ public class Student {
      * @param newPromotion the new Class
      */
     public void addPromotion(final Promotion newPromotion) {
+        if (null == this.promotions) {
+            this.promotions = new HashSet<>();
+        }
         this.promotions.add(newPromotion);
         newPromotion.addStudent(this);
     }

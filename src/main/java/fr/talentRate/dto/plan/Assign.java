@@ -16,6 +16,7 @@ limitations under the License.
 package fr.talentRate.dto.plan;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.IdClass;
 
 /**
@@ -27,10 +28,15 @@ import javax.persistence.IdClass;
 public class Assign {
 
     /** The LearningPath. */
+    @Id
     private LearningPath learningPath;
+
     /** The Skill. */
+    @Id
     private Skill skill;
+
     /** The instructor. */
+    @Id
     private Instructor instructor;
 
     /** Point given to instructor to evaluate each student for this a skill.*/

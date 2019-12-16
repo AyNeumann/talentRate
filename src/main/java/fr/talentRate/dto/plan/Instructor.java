@@ -16,7 +16,9 @@ limitations under the License.
 package fr.talentRate.dto.plan;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +26,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author djer1
@@ -41,6 +45,7 @@ public class Instructor {
     /** Student first name.*/
     private String firstName;
     /** Student birth date.*/
+    @Temporal(TemporalType.DATE)
     private Date birthdate;
 
     /** Skill this instructor can teach.*/
@@ -48,12 +53,12 @@ public class Instructor {
     private List<Skill> instructed;
 
     /** Test created by this instructor. */
-    @OneToMany(mappedBy = "instructor")
-    private List<Test> tests;
+    @OneToMany(mappedBy = "creator")
+    private Set<Test> tests;
 
     /** Courses animated by this instructor.*/
     @OneToMany
-    private List<Course> courses;
+    private Set<Course> courses;
 
     /**
      * @return the id
@@ -137,14 +142,14 @@ public class Instructor {
     /**
      * @return the tests
      */
-    public List<Test> getTests() {
+    public Set<Test> getTests() {
         return tests;
     }
 
     /**
      * @param newTests the tests to set
      */
-    public void setTests(final List<Test> newTests) {
+    public void setTests(final Set<Test> newTests) {
         this.tests = newTests;
     }
 
@@ -153,6 +158,9 @@ public class Instructor {
      * @param test a New Test
      */
     public void addTest(final Test test) {
+        if (null == this.tests) {
+            this.tests = new HashSet<>();
+        }
         this.tests.add(test);
         test.setCreator(this);
     }
@@ -160,14 +168,14 @@ public class Instructor {
     /**
      * @return the courses
      */
-    public List<Course> getCourses() {
+    public Set<Course> getCourses() {
         return courses;
     }
 
     /**
      * @param newCourses the courses to set
      */
-    public void setCourses(final List<Course> newCourses) {
+    public void setCourses(final Set<Course> newCourses) {
         this.courses = newCourses;
     }
 

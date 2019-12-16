@@ -15,13 +15,18 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
+import java.io.Serializable;
+
 import javax.persistence.ManyToOne;
 
 /**
  * Assign ID.
  * @author djer13
  */
-public class AssignId {
+public class AssignId implements Serializable {
+
+    /**serialVersionUID. */
+    private static final long serialVersionUID = 2023555763026945054L;
 
     /** The LearningPath. */
     @ManyToOne

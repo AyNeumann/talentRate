@@ -15,7 +15,7 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -50,7 +50,7 @@ public class Promotion {
 
     /** Courses available for this promotion.*/
     @OneToMany
-    private List<Course> courses;
+    private Set<Course> courses;
 
     /**
      * @return the id
@@ -99,6 +99,9 @@ public class Promotion {
      * @param newStudent The student to add
      */
     public void addStudent(final Student newStudent) {
+        if (null == this.students) {
+            this.students = new HashSet<>();
+        }
         this.students.add(newStudent);
         newStudent.addPromotion(this);
     }
@@ -120,14 +123,14 @@ public class Promotion {
     /**
      * @return the courses
      */
-    public List<Course> getCourses() {
+    public Set<Course> getCourses() {
         return courses;
     }
 
     /**
      * @param newCourses the courses to set
      */
-    public void setCourses(final List<Course> newCourses) {
+    public void setCourses(final Set<Course> newCourses) {
         this.courses = newCourses;
     }
 

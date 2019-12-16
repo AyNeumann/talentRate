@@ -15,7 +15,7 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,7 +39,7 @@ public class ActivityKind {
 
     /** All course of this Kind.*/
     @OneToMany(mappedBy = "kind")
-    private List<Course> courses;
+    private Set<Activity> activities;
 
     /**
      * @return the id
@@ -72,15 +72,15 @@ public class ActivityKind {
     /**
      * @return the courses
      */
-    public List<Course> getCourses() {
-        return courses;
+    public Set<Activity> getActivities() {
+        return activities;
     }
 
     /**
-     * @param newCourses the courses to set
+     * @param newActivity the activities to set
      */
-    public void setCourses(final List<Course> newCourses) {
-        this.courses = newCourses;
+    public void setActivities(final Set<Activity> newActivity) {
+        this.activities = newActivity;
     }
 
 }

@@ -34,6 +34,7 @@ public class Control {
     /** A test.*/
     @Id
     private Test test;
+
     /** Maximum point obtainable in this test for this skill.*/
     private Integer maximum;
 

@@ -15,7 +15,8 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,7 +40,7 @@ public class LearningPath {
 
     /** Training of this LearningPath.*/
     @OneToMany(mappedBy = "learningPath")
-    private List<Train> trained;
+    private Set<Train> trained;
 
     /**
      * @return the id
@@ -72,14 +73,14 @@ public class LearningPath {
     /**
      * @return the trained
      */
-    public List<Train> getTrained() {
+    public Set<Train> getTrained() {
         return trained;
     }
 
     /**
      * @param newTrained the trained to set
      */
-    public void setTrained(final List<Train> newTrained) {
+    public void setTrained(final Set<Train> newTrained) {
         this.trained = newTrained;
     }
 
@@ -88,6 +89,9 @@ public class LearningPath {
      * @param train a trainable Skill;
      */
     public void addTrained(final Train train) {
+        if (null == this.trained) {
+            this.trained = new HashSet<>();
+        }
         this.trained.add(train);
         train.setLearningPath(this);
     }

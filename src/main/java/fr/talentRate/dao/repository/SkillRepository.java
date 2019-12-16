@@ -17,13 +17,13 @@ package fr.talentRate.dao.repository;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import fr.talentRate.dto.plan.Student;
+import fr.talentRate.dto.plan.Skill;
 
 /**
- * Manage students.
+ * Manage Skills.
  * @author djer13
  */
-//@RepositoryRestResource(collectionResourceRel = "student", path = "student")
-public interface StudentRepository extends PagingAndSortingRepository<Student, Long> {
+//@RepositoryRestResource(collectionResourceRel = "skill", path = "skill")
+public interface SkillRepository extends PagingAndSortingRepository<Skill, Long> {
 
 }
