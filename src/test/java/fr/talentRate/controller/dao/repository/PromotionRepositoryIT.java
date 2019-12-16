@@ -25,21 +25,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import fr.talentRate.dao.repository.LearningPathRepository;
-import fr.talentRate.dto.plan.LearningPath;
+import fr.talentRate.dao.repository.PromotionRepository;
 import fr.talentRate.dto.plan.Promotion;
 
 /**
- * Basic tests of entities used in relational DataBase from Leaning Path.
+ * Basic tests of entities used in relational DataBase from Promotions.
  * @author djer13
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class LearningPathRepositoryIT {
+public class PromotionRepositoryIT {
 
     /** Manage Learning Path.*/
     @Autowired
-    private LearningPathRepository learningPathRepo;
+    private PromotionRepository promotionRepo;
 
     /** To get default Data.*/
     private DefaultDataHelper dataIntializer = new DefaultDataHelper();
@@ -52,34 +51,25 @@ public class LearningPathRepositoryIT {
     public void initData() throws ParseException {
         dataIntializer.initInstructor();
         dataIntializer.initSkills();
+        dataIntializer.initLearningPath();
+        //dataIntializer.initStudents();
     }
 
-    /**
-     * Check creation a LearningPath with trainable Skills.
-     */
+    /** Check Promotion creation. */
     @Test
-    public void testCreateLearningPath() {
-
-        final Integer hocJavaThreshold = 120;
-        final Integer hocPhpThreshold = 30;
-        final Integer hocHtmlThreshold = 10;
-
-        final int hocNumberofSkills = 3;
-
-        LearningPath houseOfCode = new LearningPath();
-        houseOfCode.setName("House of Code");
-        houseOfCode.addSkill(DefaultDataHelper.JAVA, hocJavaThreshold);
-        houseOfCode.addSkill(DefaultDataHelper.PHP, hocPhpThreshold);
-        houseOfCode.addSkill(DefaultDataHelper.HTML, hocHtmlThreshold);
+    public void testCreatePromotion() {
+        final int hocNumberOfStudent = 3;
 
         Promotion promoSaintEtienne2019 = new Promotion();
         promoSaintEtienne2019.setName("House of Code Saint-Etienne 2019");
-        promoSaintEtienne2019.setEnrolled(houseOfCode);
+        promoSaintEtienne2019.addStudent(DefaultDataHelper.SEB);
+        promoSaintEtienne2019.addStudent(DefaultDataHelper.MAT);
+        promoSaintEtienne2019.addStudent(DefaultDataHelper.VI);
 
-        learningPathRepo.save(houseOfCode);
+        promotionRepo.save(promoSaintEtienne2019);
 
-        Assert.assertEquals("Bad number of trainned Skills in Learning Path", houseOfCode.getTrained().size(),
-                hocNumberofSkills);
+        Assert.assertEquals("Bad number of trainned Skills in Learning Path",
+                promoSaintEtienne2019.getStudents().size(), hocNumberOfStudent);
 
     }
 

@@ -23,7 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import fr.talentRate.dto.plan.Instructor;
+import fr.talentRate.dto.plan.LearningPath;
+import fr.talentRate.dto.plan.Promotion;
 import fr.talentRate.dto.plan.Skill;
+import fr.talentRate.dto.plan.Student;
 
 /**
  * @author djer1
@@ -34,6 +37,9 @@ public class DefaultDataHelper {
     /** To access other repositories not under tests.*/
     @Autowired
     private TestEntityManager entityManager;
+
+    /** Default Birth Date formatter. */
+    private DateFormat birthDateFormatter = new SimpleDateFormat("yyyy-MM-dd");;
 
     /** Institute minimum HTML.*/
     private static final int INSTITUTE_MIN_HTML = 10;
@@ -70,13 +76,32 @@ public class DefaultDataHelper {
     /** The HTML Skill, available for all tests.*/
     public static final Skill HTML = new Skill();
 
+    /** House of Code Learning Path. */
+    public static final LearningPath HOC = new LearningPath();
+    /** Advanced Java Learning path. */
+    public static final LearningPath JAVA_ADVANCED = new LearningPath();
+
+    /** Saint-Etiennes's House of Code first Promotion.*/
+    public static final Promotion HOC_STE_S1 = new Promotion();
+    /** Saint-Etiennes's House of Code second Promotion.*/
+    public static final Promotion HOC_STE_S2 = new Promotion();
+    /** Saint-Etiennes's Advanced Java eighth Promotion.*/
+    public static final Promotion JAVA_ADVANCED_STE_S8 = new Promotion();
+
+    /** A medium Student. */
+    public static final Student SEB = new Student();
+    /** A tenacious Student. */
+    public static final Student VI = new Student();
+    /** A good Student. */
+    public static final Student MAT = new Student();
+    /** A Lazy student.*/
+    public static final Student SLACKER = new Student();
+
     /**
-     * Initialize default Data required for tests.
+     * Initialize default Data required for tests (instructors).
      * @throws ParseException if birth Dates are invalids
      */
-    public void initData() throws ParseException {
-
-        DateFormat birthDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    public void initInstructor() throws ParseException {
 
         JEREMIE.setName("DERUETTE");
         JEREMIE.setFirstName("Jérémie");
@@ -89,6 +114,19 @@ public class DefaultDataHelper {
         PROF3.setName("AN OTHER NAME");
         PROF3.setFirstName("prénom-composé 2");
         PROF3.setBirthdate(birthDateFormatter.parse("1990-02-01"));
+
+        entityManager.persist(JEREMIE);
+        entityManager.persist(PROF2);
+        entityManager.persist(PROF3);
+
+        entityManager.flush();
+
+    }
+
+    /**
+     * Initialize default Data required for tests (Skills). **Always** create instructors First !
+     */
+    public void initSkills() {
 
         JAVA.setName("JAVA");
         JAVA.setDescription("The best language !!");
@@ -120,6 +158,88 @@ public class DefaultDataHelper {
 
         entityManager.flush();
 
+    }
+
+    /**
+     * Initialize default Data required for tests (Learning path).
+     */
+    public void initLearningPath() {
+
+        final Integer javaAdvancedThreshold = 60;
+
+        final Integer hocJavaThreshold = 120;
+        final Integer hocPhpThreshold = 30;
+        final Integer hocHtmlThreshold = 10;
+
+        JAVA_ADVANCED.setName("Java avancée");
+        JAVA_ADVANCED.addSkill(JAVA, javaAdvancedThreshold);
+
+        HOC.setName("House of Code");
+        HOC.addSkill(DefaultDataHelper.JAVA, hocJavaThreshold);
+        HOC.addSkill(DefaultDataHelper.PHP, hocPhpThreshold);
+        HOC.addSkill(DefaultDataHelper.HTML, hocHtmlThreshold);
+
+        entityManager.persist(JAVA_ADVANCED);
+        entityManager.persist(HOC);
+
+        entityManager.flush();
+
+    }
+
+    /**
+     * Initialize default Data required for tests (promotions). **Always** create LearningPath First !
+     */
+    public void initPromotions() {
+
+        HOC_STE_S1.setName("House of Code Saint-Etienne Saison 1");
+        HOC_STE_S1.setEnrolled(HOC);
+
+        HOC_STE_S2.setName("House of Code Saint-Etienne Saison 2");
+        HOC_STE_S2.setEnrolled(HOC);
+
+        JAVA_ADVANCED_STE_S8.setName("Java avancées 2019 Q2");
+        JAVA_ADVANCED_STE_S8.setEnrolled(JAVA_ADVANCED);
+
+        entityManager.persist(HOC_STE_S1);
+        entityManager.persist(HOC_STE_S1);
+        entityManager.persist(JAVA_ADVANCED_STE_S8);
+
+        entityManager.flush();
+
+    }
+
+    /**
+     * Initialize default Data required for tests (Student). **Always** create Promotions First !
+     * @throws ParseException if birth Dates are invalids
+     */
+    public void initStudents() throws ParseException {
+
+        SEB.setName("SEB");
+        SEB.setFirstName("Sébastien");
+        SEB.setBirthdate(birthDateFormatter.parse("1987-04-17"));
+        SEB.addPromotion(HOC_STE_S1);
+
+        VI.setName("VI");
+        VI.setFirstName("Virginie");
+        VI.setBirthdate(birthDateFormatter.parse("1975-01-15"));
+        VI.addPromotion(HOC_STE_S1);
+        VI.addPromotion(JAVA_ADVANCED_STE_S8);
+
+        MAT.setName("MAT");
+        MAT.setFirstName("Mathieu");
+        MAT.setBirthdate(birthDateFormatter.parse("1984-03-02"));
+        MAT.addPromotion(HOC_STE_S1);
+
+        SLACKER.setName("SLCAKER");
+        SLACKER.setFirstName("Lazy");
+        SLACKER.setBirthdate(birthDateFormatter.parse("1995-05-01"));
+
+        entityManager.persist(SEB);
+        entityManager.persist(VI);
+        entityManager.persist(MAT);
+        entityManager.persist(SLACKER);
+
+        entityManager.flush();
     }
 
 }

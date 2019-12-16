@@ -95,15 +95,26 @@ public class Promotion {
     }
 
     /**
-     * Add a Student to this class.
+     * Add a Student to this promotion.
      * @param newStudent The student to add
      */
     public void addStudent(final Student newStudent) {
+        addStudent(newStudent, Boolean.FALSE);
+    }
+
+    /**
+     * Add a Student to this promotion.
+     * @param newStudent The student to add
+     *  @param insertBackLinkToStudent if true the promotion is also added to Student
+     */
+    public void addStudent(final Student newStudent, final Boolean insertBackLinkToStudent) {
         if (null == this.students) {
             this.students = new HashSet<>();
         }
         this.students.add(newStudent);
-        newStudent.addPromotion(this);
+        if (insertBackLinkToStudent) {
+            newStudent.addPromotion(this);
+        }
     }
 
     /**
