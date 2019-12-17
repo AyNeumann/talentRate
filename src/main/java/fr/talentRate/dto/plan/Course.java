@@ -22,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author djer1
@@ -34,18 +35,27 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /** Course description. */
+    @NotNull
     private String description;
+
     /** Course start Date and Time.*/
+    @NotNull
     private Date startDate;
+
     /** Course end Date and Time.*/
+    @NotNull
     private Date endDate;
 
     /** Instructor for this course.*/
     @ManyToOne
+    @NotNull
     private Instructor instructor;
     /** Promotion following this course. */
+
     @ManyToOne
+    @NotNull
     private Promotion promotion;
 
     /**

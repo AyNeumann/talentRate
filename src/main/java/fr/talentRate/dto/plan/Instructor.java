@@ -27,6 +27,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author djer1
@@ -39,12 +40,18 @@ public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /**Student Name.*/
+    @NotNull
     private String name;
+
     /** Student first name.*/
+    @NotNull
     private String firstName;
+
     /** Student birth date.*/
     @Temporal(TemporalType.DATE)
+    @NotNull
     private Date birthdate;
 
     /** Skill this instructor can teach.*/

@@ -18,6 +18,7 @@ package fr.talentRate.dto.plan;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author djer1
@@ -30,10 +31,13 @@ public class Train {
     /** The Learning Path. */
     @Id
     private LearningPath learningPath;
+
     /** The Skill. */
     @Id
     private Skill skill;
+
     /** max point obtainable for the Skill in this LearningPath. */
+    @NotNull
     private Integer achievableThreshold;
 
     /**

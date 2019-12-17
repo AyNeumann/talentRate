@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  * Student data representation.
@@ -21,11 +22,17 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /**Student Name.*/
+    @NotNull
     private String name;
+
     /** Student first name.*/
+    @NotNull
     private String firstName;
+
     /** Student birth date.*/
+    @NotNull
     private Date birthdate;
 
     /** Class this student Belong to.*/

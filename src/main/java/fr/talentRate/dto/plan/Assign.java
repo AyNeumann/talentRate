@@ -18,6 +18,7 @@ package fr.talentRate.dto.plan;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.validation.constraints.NotNull;
 
 /**
  * A Skill is assign to an instructor for à particular Skill with available Point to give to each Student.
@@ -40,6 +41,7 @@ public class Assign {
     private Instructor instructor;
 
     /** Point given to instructor to evaluate each student for this a skill.*/
+    @NotNull
     private Integer distributablePoints;
 
     /**

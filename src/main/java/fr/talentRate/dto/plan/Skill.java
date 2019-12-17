@@ -24,6 +24,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author djer1
@@ -36,15 +37,25 @@ public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /** The Skill name.*/
+    @NotNull
     private String name;
+
     /** The Skill description.*/
+    @NotNull
     private String description;
+
     /** The skill **global** minimum threshold.*/
+    @NotNull
     private Integer minimumThreshold;
+
     /** The skill **global** intermediate threshold.*/
+    @NotNull
     private Integer intermediaryThreshold;
+
     /** The skill **global** maximum threshold.*/
+    @NotNull
     private Integer maximumThreshold;
 
     /** All instructor who can train student for this Skill.*/

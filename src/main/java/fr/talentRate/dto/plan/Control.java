@@ -18,6 +18,7 @@ package fr.talentRate.dto.plan;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author djer1
@@ -36,6 +37,7 @@ public class Control {
     private Test test;
 
     /** Maximum point obtainable in this test for this skill.*/
+    @NotNull
     private Integer maximum;
 
     /**

@@ -22,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 /**
  * Activity are part of day. They are realized as part of a course.
@@ -39,9 +40,11 @@ public class Activity {
     private String description;
 
     /** Activity start Date and Time.*/
+    @NotNull
     private Date startDate;
 
     /** Activity end Date and Time.*/
+    @NotNull
     private Date endDate;
 
     /** Activity belong to this course.*/

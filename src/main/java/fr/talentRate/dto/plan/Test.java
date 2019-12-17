@@ -24,6 +24,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  * A test to check Student progression.
@@ -38,10 +39,12 @@ public class Test {
     private Long id;
 
     /** test Name. */
+    @NotNull
     private String name;
 
     /** Instructor who plan this Test.*/
     @ManyToOne
+    @NotNull
     private Instructor creator;
 
     /** All skill checked by this test.*/

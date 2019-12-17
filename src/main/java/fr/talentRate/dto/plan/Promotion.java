@@ -25,6 +25,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  * Allow to create group of students over time.
@@ -37,7 +38,9 @@ public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /** Class Name. Ex : "House of Code 2019".*/
+    @NotNull
     private String name;
 
     /** Students of this class.*/

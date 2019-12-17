@@ -23,6 +23,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  * Regroup informations about à learning Path.
@@ -35,7 +36,9 @@ public class LearningPath {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /**Learning path name. Ex "House of Code".*/
+    @NotNull
     private String name;
 
     /** Training of this LearningPath.*/

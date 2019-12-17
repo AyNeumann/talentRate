@@ -22,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author djer1
@@ -34,7 +35,9 @@ public class ActivityKind {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     /** Activity Name. */
+    @NotNull
     private String name;
 
     /** All course of this Kind.*/
