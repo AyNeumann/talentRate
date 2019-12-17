@@ -152,8 +152,8 @@
 					<!-- THE ELASTICSEARCH VERSION; REPLACE WITH THE VERSION YOU NEED -->
 					<version>${elasticsearch.version}</version>
 					<clusterName>TalentRateTest</clusterName>
-					<transportPort>9300</transportPort>
-					<httpPort>9200</httpPort>
+					<transportPort>9301</transportPort>
+					<httpPort>9201</httpPort>
 				</configuration>
 				<executions>
 					<!-- The elasticsearch maven plugin goals are by default bound to the 
