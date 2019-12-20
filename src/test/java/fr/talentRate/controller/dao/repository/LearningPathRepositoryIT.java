@@ -55,7 +55,8 @@ public class LearningPathRepositoryIT {
     @Test
     public void testCreateLearningPath() throws ParseException {
 
-        dataIntializer = new DefaultDataHelper(entityManager);
+        dataIntializer = new DefaultDataHelper();
+        dataIntializer.setEntityManager(entityManager);
         dataIntializer.initInstructor();
         dataIntializer.initSkills();
 

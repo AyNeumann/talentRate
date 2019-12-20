@@ -97,14 +97,6 @@ public class DefaultDataHelper {
     public static final Student SLACKER = new Student();
 
     /**
-     * Create an instance.
-     * @param em EntityManager to manage data
-     */
-    public DefaultDataHelper(final TestEntityManager em) {
-        this.entityManager = em;
-    }
-
-    /**
      * Initialize default Data required for tests (instructors).
      * @throws ParseException if birth Dates are invalids
      */
@@ -247,6 +239,20 @@ public class DefaultDataHelper {
         entityManager.persist(SLACKER);
 
         entityManager.flush();
+    }
+
+    /**
+     * @return The entityManager
+     */
+    public TestEntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    /**
+     * @param newEntityManager The entityManager to set
+     */
+    public void setEntityManager(final TestEntityManager newEntityManager) {
+        this.entityManager = newEntityManager;
     }
 
 }

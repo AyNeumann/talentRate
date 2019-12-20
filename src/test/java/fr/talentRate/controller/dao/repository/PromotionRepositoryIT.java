@@ -51,7 +51,8 @@ public class PromotionRepositoryIT {
      * @throws ParseException when Birth Date format is invalid */
     @Test
     public void testCreatePromotion() throws ParseException {
-        dataIntializer = new DefaultDataHelper(entityManager);
+        dataIntializer = new DefaultDataHelper();
+        dataIntializer.setEntityManager(entityManager);
         dataIntializer.initInstructor();
         dataIntializer.initSkills();
         dataIntializer.initLearningPath();
