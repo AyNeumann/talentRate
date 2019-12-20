@@ -32,12 +32,12 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class LearningPath {
 
-    /** learning path ID.*/
+    /** Learning path ID.*/
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    /**Learning path name. Ex "House of Code".*/
+    /** Learning path name. Ex "House of Code".*/
     @NotNull
     private String name;
 
@@ -46,42 +46,42 @@ public class LearningPath {
     private Set<Train> trained;
 
     /**
-     * @return the id
+     * @return The id
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * @param newId the id to set
+     * @param newId The id to set
      */
     public void setId(final Long newId) {
         this.id = newId;
     }
 
     /**
-     * @return the name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @param newName the name to set
+     * @param newName The name to set
      */
     public void setName(final String newName) {
         this.name = newName;
     }
 
     /**
-     * @return the trained
+     * @return The trained
      */
     public Set<Train> getTrained() {
         return trained;
     }
 
     /**
-     * @param newTrained the trained to set
+     * @param newTrained The trained to set
      */
     public void setTrained(final Set<Train> newTrained) {
         this.trained = newTrained;
@@ -89,7 +89,7 @@ public class LearningPath {
 
     /**
      * Add a trainable Skill (with an achievable threshold). You should use addSkill instead of this low level method.
-     * @param train a trainable Skill;
+     * @param train A trainable Skill;
      */
     public void addTrained(final Train train) {
         if (null == this.trained) {
@@ -102,7 +102,7 @@ public class LearningPath {
     /**
      * Add a skill to this LearningPath with an achievable threshold.
      * @param skill The skill to be learned
-     * @param achievableThreshold the maximum level attainable
+     * @param achievableThreshold The maximum level attainable
      */
     public void addSkill(final Skill skill, final Integer achievableThreshold) {
         Train train = new Train();

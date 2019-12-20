@@ -41,15 +41,15 @@ public class Instructor {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    /**Student Name.*/
+    /** Instructor Name.*/
     @NotNull
     private String name;
 
-    /** Student first name.*/
+    /** Instructor first name.*/
     @NotNull
     private String firstName;
 
-    /** Student birth date.*/
+    /** Instructor birth date.*/
     @Temporal(TemporalType.DATE)
     @NotNull
     private Date birthdate;

@@ -194,3 +194,7 @@ To add an evaluation :
 }
 ```
 
+#Client Library
+##Java
+A Java client library is aviallable here : <https://github.com/jderuette/TalentRate_clientLibrary>
+

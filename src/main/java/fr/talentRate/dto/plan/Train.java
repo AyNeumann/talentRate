@@ -21,8 +21,8 @@ import javax.persistence.IdClass;
 import javax.validation.constraints.NotNull;
 
 /**
- * @author djer1
- *
+ * Represent an available training.
+ * @author djer13
  */
 @Entity
 @IdClass(TrainId.class)
@@ -41,42 +41,42 @@ public class Train {
     private Integer achievableThreshold;
 
     /**
-     * @return the learningPath
+     * @return The learningPath
      */
     public LearningPath getLearningPath() {
         return learningPath;
     }
 
     /**
-     * @param newLearningPath the learningPath to set
+     * @param newLearningPath The learningPath to set
      */
     public void setLearningPath(final LearningPath newLearningPath) {
         this.learningPath = newLearningPath;
     }
 
     /**
-     * @return the skill
+     * @return The skill
      */
     public Skill getSkill() {
         return skill;
     }
 
     /**
-     * @param newSkill the skill to set
+     * @param newSkill The skill to set
      */
     public void setSkill(final Skill newSkill) {
         this.skill = newSkill;
     }
 
     /**
-     * @return the achievableThreshold
+     * @return The achievableThreshold
      */
     public Integer getAchievableThreshold() {
         return achievableThreshold;
     }
 
     /**
-     * @param newAchievableThreshold the achievableThreshold to set
+     * @param newAchievableThreshold The achievableThreshold to set
      */
     public void setAchievableThreshold(final Integer newAchievableThreshold) {
         this.achievableThreshold = newAchievableThreshold;

@@ -56,84 +56,84 @@ public class Activity {
     private ActivityKind kind;
 
     /**
-     * @return the id
+     * @return The id
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * @param newId the id to set
+     * @param newId The id to set
      */
     public void setId(final Long newId) {
         this.id = newId;
     }
 
     /**
-     * @return the description
+     * @return The description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * @param newDescription the description to set
+     * @param newDescription The description to set
      */
     public void setDescription(final String newDescription) {
         this.description = newDescription;
     }
 
     /**
-     * @return the startDate
+     * @return The startDate
      */
     public Date getStartDate() {
         return startDate;
     }
 
     /**
-     * @param newStartDate the startDate to set
+     * @param newStartDate The startDate to set
      */
     public void setStartDate(final Date newStartDate) {
         this.startDate = newStartDate;
     }
 
     /**
-     * @return the endDate
+     * @return The endDate
      */
     public Date getEndDate() {
         return endDate;
     }
 
     /**
-     * @param newEndDate the endDate to set
+     * @param newEndDate The endDate to set
      */
     public void setEndDate(final Date newEndDate) {
         this.endDate = newEndDate;
     }
 
     /**
-     * @return the course
+     * @return The course
      */
     public Course getCourse() {
         return course;
     }
 
     /**
-     * @param newCourse the course to set
+     * @param newCourse The course to set
      */
     public void setCourse(final Course newCourse) {
         this.course = newCourse;
     }
 
     /**
-     * @return the kind
+     * @return The kind
      */
     public ActivityKind getKind() {
         return kind;
     }
 
     /**
-     * @param newKind the kind to set
+     * @param newKind The kind to set
      */
     public void setKind(final ActivityKind newKind) {
         this.kind = newKind;

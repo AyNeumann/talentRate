@@ -67,98 +67,98 @@ public class Skill {
     private Set<Train> teachedIn;
 
     /**
-     * @return the id
+     * @return The id
      */
     public Long getId() {
         return id;
     }
 
     /**
-     * @param newId the id to set
+     * @param newId The id to set
      */
     public void setId(final Long newId) {
         this.id = newId;
     }
 
     /**
-     * @return the name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @param newName the name to set
+     * @param newName The name to set
      */
     public void setName(final String newName) {
         this.name = newName;
     }
 
     /**
-     * @return the description
+     * @return The description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * @param newDescription the description to set
+     * @param newDescription The description to set
      */
     public void setDescription(final String newDescription) {
         this.description = newDescription;
     }
 
     /**
-     * @return the minimumThreshold
+     * @return The minimumThreshold
      */
     public Integer getMinimumThreshold() {
         return minimumThreshold;
     }
 
     /**
-     * @param newMinimumThreshold the minimumThreshold to set
+     * @param newMinimumThreshold The minimumThreshold to set
      */
     public void setMinimumThreshold(final Integer newMinimumThreshold) {
         this.minimumThreshold = newMinimumThreshold;
     }
 
     /**
-     * @return the intermediaryThreshold
+     * @return The intermediaryThreshold
      */
     public Integer getIntermediaryThreshold() {
         return intermediaryThreshold;
     }
 
     /**
-     * @param newIntermediaryThreshold the intermediaryThreshold to set
+     * @param newIntermediaryThreshold The intermediaryThreshold to set
      */
     public void setIntermediaryThreshold(final Integer newIntermediaryThreshold) {
         this.intermediaryThreshold = newIntermediaryThreshold;
     }
 
     /**
-     * @return the maximumThreshold
+     * @return The maximumThreshold
      */
     public Integer getMaximumThreshold() {
         return maximumThreshold;
     }
 
     /**
-     * @param newMaximumThreshold the maximumThreshold to set
+     * @param newMaximumThreshold The maximumThreshold to set
      */
     public void setMaximumThreshold(final Integer newMaximumThreshold) {
         this.maximumThreshold = newMaximumThreshold;
     }
 
     /**
-     * @return the instructors
+     * @return The instructors
      */
     public Set<Instructor> getInstructors() {
         return instructors;
     }
 
     /**
-     * @param newInstructors the instructors to set
+     * @param newInstructors The instructors to set
      */
     public void setInstructors(final Set<Instructor> newInstructors) {
         this.instructors = newInstructors;
@@ -166,7 +166,7 @@ public class Skill {
 
     /**
      * Add an instructor for this Skill.
-     * @param instructor the instructor who an teach this skill
+     * @param instructor The instructor who an teach this skill
      */
     public void addInstructor(final Instructor instructor) {
         addInstructor(instructor, Boolean.FALSE);
@@ -174,8 +174,8 @@ public class Skill {
 
     /**
      * Add an instructor for this Skill.
-     * @param instructor the instructor who an teach this skill
-     * @param insertBackLink insert Link to this Skill for the instructor.
+     * @param instructor The instructor who an teach this skill
+     * @param insertBackLink Insert Link to this Skill for the instructor.
      */
     public void addInstructor(final Instructor instructor, final Boolean insertBackLink) {
         if (null == this.instructors) {
@@ -188,14 +188,14 @@ public class Skill {
     }
 
     /**
-     * @return the teachedIn
+     * @return The teachedIn
      */
     public Set<Train> getTeachedIn() {
         return teachedIn;
     }
 
     /**
-     * @param newTeachedIn the teachedIn to set
+     * @param newTeachedIn The teachedIn to set
      */
     public void setTeachedIn(final Set<Train> newTeachedIn) {
         this.teachedIn = newTeachedIn;

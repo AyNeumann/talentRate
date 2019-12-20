@@ -41,42 +41,42 @@ public class Control {
     private Integer maximum;
 
     /**
-     * @return the skill
+     * @return The skill
      */
     public Skill getSkill() {
         return skill;
     }
 
     /**
-     * @param newSkill the skill to set
+     * @param newSkill The skill to set
      */
     public void setSkill(final Skill newSkill) {
         this.skill = newSkill;
     }
 
     /**
-     * @return the test
+     * @return The test
      */
     public Test getTest() {
         return test;
     }
 
     /**
-     * @param newTest the test to set
+     * @param newTest The test to set
      */
     public void setTest(final Test newTest) {
         this.test = newTest;
     }
 
     /**
-     * @return the maximum
+     * @return The maximum
      */
     public Integer getMaximum() {
         return maximum;
     }
 
     /**
-     * @param newMaximum the maximum to set
+     * @param newMaximum The maximum to set
      */
     public void setMaximum(final Integer newMaximum) {
         this.maximum = newMaximum;
