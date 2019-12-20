@@ -24,11 +24,11 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
  *
  */
 @SpringBootApplication
-public class Launcher {
+public class TalentRateServerLauncher {
     /**
      * @param args command line args
      */
     public static void main(final String[] args) {
-        new SpringApplicationBuilder(Launcher.class).web(WebApplicationType.SERVLET).run(args);
+        new SpringApplicationBuilder(TalentRateServerLauncher.class).web(WebApplicationType.SERVLET).run(args);
     }
 }
