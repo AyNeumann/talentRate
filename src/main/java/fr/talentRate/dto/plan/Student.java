@@ -2,6 +2,7 @@ package fr.talentRate.dto.plan;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -38,6 +39,34 @@ public class Student {
     /** Class this student Belong to.*/
     @ManyToMany
     private Set<Promotion> promotions;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(birthdate, firstName, id, name, promotions);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Student other = (Student) obj;
+        return Objects.equals(birthdate, other.birthdate) && Objects.equals(firstName, other.firstName)
+                && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+                && Objects.equals(promotions, other.promotions);
+    }
 
     /**
      * @return the id

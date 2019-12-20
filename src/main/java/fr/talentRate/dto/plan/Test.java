@@ -16,6 +16,7 @@ limitations under the License.
 package fr.talentRate.dto.plan;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -50,6 +51,33 @@ public class Test {
     /** All skill checked by this test.*/
     @OneToMany
     private Set<Control> controls;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(controls, creator, id, name);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Test other = (Test) obj;
+        return Objects.equals(controls, other.controls) && Objects.equals(creator, other.creator)
+                && Objects.equals(id, other.id) && Objects.equals(name, other.name);
+    }
 
     /**
      * @return the id

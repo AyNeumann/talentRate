@@ -15,6 +15,8 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -43,6 +45,34 @@ public class Assign {
     /** Point given to instructor to evaluate each student for this a skill.*/
     @NotNull
     private Integer distributablePoints;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(distributablePoints, instructor, learningPath, skill);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Assign other = (Assign) obj;
+        return Objects.equals(distributablePoints, other.distributablePoints)
+                && Objects.equals(instructor, other.instructor) && Objects.equals(learningPath, other.learningPath)
+                && Objects.equals(skill, other.skill);
+    }
 
     /**
      * @return the learningPath

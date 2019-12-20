@@ -16,6 +16,7 @@ limitations under the License.
 package fr.talentRate.dto.plan;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -65,6 +66,38 @@ public class Skill {
     /** Possible training (link to the LearningPath, with an achievable threshold).*/
     @OneToMany(mappedBy = "skill")
     private Set<Train> teachedIn;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(description, id, instructors, intermediaryThreshold, maximumThreshold, minimumThreshold,
+                name, teachedIn);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Skill other = (Skill) obj;
+        return Objects.equals(description, other.description) && Objects.equals(id, other.id)
+                && Objects.equals(instructors, other.instructors)
+                && Objects.equals(intermediaryThreshold, other.intermediaryThreshold)
+                && Objects.equals(maximumThreshold, other.maximumThreshold)
+                && Objects.equals(minimumThreshold, other.minimumThreshold) && Objects.equals(name, other.name)
+                && Objects.equals(teachedIn, other.teachedIn);
+    }
 
     /**
      * @return The id

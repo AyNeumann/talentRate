@@ -15,6 +15,7 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -43,6 +44,33 @@ public class ActivityKind {
     /** All course of this Kind.*/
     @OneToMany(mappedBy = "kind")
     private Set<Activity> activities;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(activities, id, name);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ActivityKind other = (ActivityKind) obj;
+        return Objects.equals(activities, other.activities) && Objects.equals(id, other.id)
+                && Objects.equals(name, other.name);
+    }
 
     /**
      * @return the id

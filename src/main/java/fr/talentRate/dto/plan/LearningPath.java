@@ -16,6 +16,7 @@ limitations under the License.
 package fr.talentRate.dto.plan;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -44,6 +45,33 @@ public class LearningPath {
     /** Training of this LearningPath.*/
     @OneToMany(mappedBy = "learningPath")
     private Set<Train> trained;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, trained);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        LearningPath other = (LearningPath) obj;
+        return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+                && Objects.equals(trained, other.trained);
+    }
 
     /**
      * @return The id

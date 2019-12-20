@@ -16,6 +16,7 @@ limitations under the License.
 package fr.talentRate.dto.plan;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,6 +55,34 @@ public class Activity {
     /** Kind of activity. */
     @ManyToOne
     private ActivityKind kind;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(course, description, endDate, id, kind, startDate);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Activity other = (Activity) obj;
+        return Objects.equals(course, other.course) && Objects.equals(description, other.description)
+                && Objects.equals(endDate, other.endDate) && Objects.equals(id, other.id)
+                && Objects.equals(kind, other.kind) && Objects.equals(startDate, other.startDate);
+    }
 
     /**
      * @return The id

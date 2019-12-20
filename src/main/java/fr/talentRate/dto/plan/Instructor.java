@@ -17,6 +17,7 @@ package fr.talentRate.dto.plan;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -65,6 +66,35 @@ public class Instructor {
     /** Courses animated by this instructor.*/
     @OneToMany
     private Set<Course> courses;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(birthdate, courses, firstName, id, instructed, name, tests);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Instructor other = (Instructor) obj;
+        return Objects.equals(birthdate, other.birthdate) && Objects.equals(courses, other.courses)
+                && Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id)
+                && Objects.equals(instructed, other.instructed) && Objects.equals(name, other.name)
+                && Objects.equals(tests, other.tests);
+    }
 
     /**
      * @return the id

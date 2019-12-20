@@ -15,6 +15,8 @@ limitations under the License.
  */
 package fr.talentRate.dto.plan;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -39,6 +41,33 @@ public class Control {
     /** Maximum point obtainable in this test for this skill.*/
     @NotNull
     private Integer maximum;
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(maximum, skill, test);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Control other = (Control) obj;
+        return Objects.equals(maximum, other.maximum) && Objects.equals(skill, other.skill)
+                && Objects.equals(test, other.test);
+    }
 
     /**
      * @return The skill
